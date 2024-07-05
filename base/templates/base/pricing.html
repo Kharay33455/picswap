@@ -124,7 +124,7 @@
             <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
                 <a href="/" class="d-flex align-items-center link-body-emphasis text-decoration-none">
                     <img src="{% static 'images/download.jpg' %}" width="40" height="40">
-                    <span class="fs-4">Subscription plans</span>
+                    <span class="fs-4">Subscription plans for sellers</span>
                 </a>
 
                 <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
@@ -160,7 +160,11 @@
                                 <li>Email support</li>
                                 <li>No promotion</li>
                             </ul>
+                            {% if request.user.is_authenticated %}
+                            <button type="button" class="w-100 btn btn-lg btn-outline-primary">Start selling</button>
+{% else %}
                             <button type="button" class="w-100 btn btn-lg btn-outline-primary">Sign up for free</button>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
