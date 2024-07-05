@@ -1,0 +1,20 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+<h1>
+    {{piece.name}}
+</h1>
+<div style="padding: 40px;">
+    <img src="{{piece.image.url}}" class="piece" alt="">
+</div>
+<div style="padding-left: 50px; padding-right: 50px;">
+    <p>
+        {{piece.description}}
+    </p>
+</div>
+
+<p> 
+    <a class="btn btn-primary" href="">Place an offer for this piece</a> 
+</p>
+
+{% endblock %}

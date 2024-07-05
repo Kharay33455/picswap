@@ -122,10 +122,13 @@
 
     <!--Making the navbar here-->
 
-    <header data-bs-theme="dark">
-        <nav class="navbar navbar-expand-lg bg-body-tertiary my-nav" >
+    <header >
+        <nav class="navbar navbar-expand-lg my-nav" >
             <div class="container-fluid">
-              <a class="navbar-brand" href="{% url 'base:home' %}">SwapApp</a>
+              <a class="navbar-brand" href="{% url 'base:home' %}">
+                <span>ART SWAP</span>
+                <img src="{% static 'images/download.jpg' %}" width="60" height="60" alt="">
+              </a>
               <div data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
                 <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="white" class="bi bi-three-dots-vertical menu" viewBox="0 0 16 16">
                     <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
@@ -137,10 +140,10 @@
                     <a class="nav-link active" aria-current="page" href="{% url 'base:home' %}">Home</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'base:featured' %}">Features</a>
+                    <a class="nav-link" href="{% url 'base:featured' %}">Featured</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
+                    <a class="nav-link" href="{% url 'base:pricing' %}">Pricing</a>
                   </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'base:about' %}">About</a>
@@ -157,7 +160,7 @@
     </header>
 
     <main>
-        <div class="my_container">
+        <div class="my_container box">
         {% block content %}
         {% endblock %}
     </div>
@@ -174,7 +177,7 @@
         <!-- FOOTER -->
         <footer class="container">
             <p class="float-end"><a href="#">Back to top</a></p>
-            <p>© 2017–2024 Company, Inc. · <a href="#">Privacy</a> · <a href="#">Terms</a></p>
+            <p>© 2023–2024 Company, Inc.</p>
         </footer>
     </main>
     <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js"

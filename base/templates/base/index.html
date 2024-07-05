@@ -1,52 +1,44 @@
 {% extends 'base/base.html' %}
+{% load static %}
 {% block content %}
 <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
     <div class="carousel-indicators">
-        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active"
-            aria-label="Slide 1" aria-current="true"></button>
-        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"
-            class=""></button>
-        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"
-            class=""></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-label="Slide 1"
+            aria-current="true"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2" class=""></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3" class=""></button>
     </div>
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
-                <rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect>
-            </svg>
+            <img src="{% static 'images/sell-art-online.jpg' %}" class='carousel-img' alt="">
             <div class="container">
                 <div class="carousel-caption text-start">
-                    <h1>Example headline.</h1>
-                    <p class="opacity-75">Some representative placeholder content for the first slide of the
-                        carousel.</p>
+                    <h1>Sell photos safely</h1>
+                    <p class="opacity-75">Monetize your creativity by selling your photos on Art Swap, ensuring secure
+                        transactions with full escrow protection.</p>
                     <p><a class="btn btn-lg btn-primary" href="#">Sign up today</a></p>
                 </div>
             </div>
         </div>
         <div class="carousel-item">
-            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
-                <rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect>
-            </svg>
+            <img src="{% static 'images/buy.png' %}" class="carousel-img" alt="">
             <div class="container">
                 <div class="carousel-caption">
-                    <h1>Another example headline.</h1>
-                    <p>Some representative placeholder content for the second slide of the carousel.</p>
-                    <p><a class="btn btn-lg btn-primary" href="#">Learn more</a></p>
+                    <h1>Buy photos safely</h1>
+                    <p>Purchase photos copyrighted by us for both personal and commercial use worry-free.</p>
+                    <p><a class="btn btn-lg btn-primary" href="#">Browse Gallery</a></p>
                 </div>
             </div>
         </div>
         <div class="carousel-item">
-            <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
-                <rect width="100%" height="100%" fill="var(--bs-secondary-color)"></rect>
-            </svg>
+            <img src="{% static 'images/p2p.jpg' %}" class="carousel-img" alt="">
             <div class="container">
                 <div class="carousel-caption text-end">
-                    <h1>One more for good measure.</h1>
-                    <p>Some representative placeholder content for the third slide of this carousel.</p>
-                    <p><a class="btn btn-lg btn-primary" href="#">Browse gallery</a></p>
+                    <h1>Escrow services</h1>
+                    <p>
+                        Escrow services are available to ensure smooth and secure transactions for all parties involved.
+                    </p>
+                    <p><a class="btn btn-lg btn-primary" href="#">Learn More</a></p>
                 </div>
             </div>
         </div>
@@ -59,5 +51,43 @@
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
     </button>
+    <br>
+
+    <div>
+        <h2>Quick guide to using Art Swap to buy and sell photos.</h2>
+        <p>
+            Firstly, let's make it clear that we exclusively handle images licensed by us. Images copyrighted by other
+            entities cannot be traded on this platform.
+        </p>
+        <p>
+            You can copyright your original image through us for a one time payment fee $50 per image, obtaining a
+            license that permits you to distribute the image and protects it from unauthorized use. This covers banners,
+            Facebook and other social media posts, blog posts, store decorations, and similar uses. </p>
+        <p>
+            If you sell a licensed image to a buyer, all rights are transferred to them. This enables them to use and
+            modify the image as they wish. Additionally, you are not allowed to redistribute the image or create new
+            copies of it.
+        </p>
+        <h3>
+            Buying images on Art Swap
+        </h3>
+        <p>
+            When purchasing an image copyrighted by us, our escrow service ensures a smooth transaction between buyer
+            and seller. Initially, the image is held by us. The buyer deposits the agreed amount into their wallet and
+            transfers it to the escrow account. Upon confirmation from the seller that the amount matches the agreed
+            order, the funds are released to the seller and the image is transferred to the buyer. A licensing fee,
+            based on a percentage of the transaction amount, is required to receive your license.</p>
+        <h4>
+            Selling images on Art Swap
+        </h4>
+        <p>
+            Selling an image on Art Swap is straightforward. Begin by uploading the original copy of your image in any
+            format. Next, ensure the image is copyrighted in your catalog, which incurs a one-time fee of $50. We verify
+            its originality and absence of copyright infringement with other agencies. Note that you are responsible for
+            uploading only your own content. Once completed, you can list the image for sale. A unique token code
+            specific to your image will be generated. Share this code with your buyer or initiate an order to start the
+            transaction. Avoid sending the image directly to the buyer as we cannot provide protection if you do so.
+        </p>
+    </div>
 </div>
 {% endblock %}
