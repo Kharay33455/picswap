@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
 <h1>
-    {{piece.name}}
+    {{piece.name}} by {{piece.owner.artist.name}}
 </h1>
 <div style="padding: 40px;">
     <img src="{{piece.image.url}}" class="piece" alt="">
@@ -13,8 +13,13 @@
     </p>
 </div>
 
+{% if piece.owner == request.user %}
+<p> 
+    <a class="btn btn-danger" href="">Delete this piece?</a> 
+</p>
+{% else %}
 <p> 
     <a class="btn btn-primary" href="">Place an offer for this piece</a> 
 </p>
-
+{% endif %}
 {% endblock %}

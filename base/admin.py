@@ -4,3 +4,8 @@ from .models import *
 admin.site.register(Images)
 admin.site.register(Artist)
 admin.site.register(Buyer)
+admin.site.register(Company_name)
+admin.site.register(Copyright)
+admin.site.register(Wallet)
+admin.site.register(CartItem)
+admin.site.register(Cart)

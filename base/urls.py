@@ -12,4 +12,8 @@ urlpatterns =[
     path('login', views.login_request, name='login'),
     path('register', views.register_request, name='register'),
     path('logout', views.logout_request, name='logout'),
+    path('profile',views.profile, name='profile'),
+    path('show-and-tell', views.show, name="show"),
+    path('learn-more-about-copyright', views.copyright, name='copyright'),
+    path('pay', views.pay, name="pay"),
 ]

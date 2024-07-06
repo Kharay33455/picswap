@@ -1,0 +1,22 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+<h1>
+    SHOW AND TELL
+</h1>
+<form action="{% url 'base:show' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+<div style="padding: 3%;">
+    <div class="form-group">
+<label for="name"><b>Image name:</b></label>
+<input class="form-control" type="text" id="name" name="name" required maxlength="20" placeholder="Hint: Stand out with a catchy name">
+<br>
+<label for="des"><b>Description:</b></label>
+<textarea name="des" id="des" rows="5" class="form-control" placeholder="Tell us about your piece..."></textarea> <br>
+<label for="image"><b>Original image/photo:</b></label>
+<input class="form-control" name="image" id="image" type="file">
+</div>
+</div>
+<button class="btn btn-bd-primary" type="submit">Proceed</button>
+</form>
+{% endblock %}

@@ -7,7 +7,7 @@
         {% for img in featured %}
         <div class="col-lg-4">
             <img src="{{img.image.url}}" class="rounded-circle" width="200px" height="200px" alt="">
-            <h2 class="fw-normal">{{img.name}}</h2><small>By {{img.artist.name}} </small>
+            <h2 class="fw-normal">{{img.name}}</h2><small>By {{img.owner.artist.name}} </small>
             <p> {{img.description|slice:150}}... <a href="{% url 'base:details' img.id %}">View more</a> </p>
             <p><a class="btn btn-secondary" href="{% url 'base:details' img.id %}">View details »</a></p>
         </div><!-- /.col-lg-4 -->

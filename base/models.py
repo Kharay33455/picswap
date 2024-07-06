@@ -18,10 +18,11 @@ class Artist(models.Model):
 
 class Images(models.Model):
     name = models.CharField(max_length = 30)
-    artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.TextField()
     image = models.ImageField(upload_to='images')
     is_featured = models.BooleanField()
+    is_copyright= models.BooleanField(default=False)
     date_uploaded = models.DateField(auto_now_add=True)
 
     def __str__(self):
@@ -33,3 +34,41 @@ class Buyer(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+    
+
+class Copyright(models.Model):
+    image = models.OneToOneField(Images, on_delete=models.CASCADE)
+    published = models.CharField(max_length=4)
+    year = models.CharField(max_length=4)
+    co_authors = models.CharField(max_length=30, blank=True, null=True)
+    work_type = models.CharField(max_length=10)
+    other = models.CharField(max_length=10, blank=True, null=True)
+    is_paid = models.BooleanField(default=False)
+    is_processed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'Copyright proceedings for {self.image.name}'
+    
+
+class Wallet(models.Model):
+    currency = models.CharField(max_length=10)
+    network = models.CharField(max_length=20)
+    address = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f'{self.currency} {self.network} wallet'
+    
+class Cart(models.Model):
+    owner = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        f'{self.owner.username}\'s cart'
+    
+class CartItem(models.Model):
+    product_name = models.CharField(max_length=20)
+    product_description = models.CharField(max_length=50)
+    product_value = models.IntegerField()
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+
+    def __str__(self):
+        f'{self.product_name}'

@@ -1,4 +1,4 @@
-{% extends 'base/main.html' %}
+{% extends 'base/base.html' %}
 {% load static %}
 
 {% block content %}
@@ -53,13 +53,13 @@
           <div class="col-lg-4">
               <div class="card">
                   <div class="card-body">
-                      <h2>Welcome {{ customer.first_name }},</h2>
+                      <h2>Welcome {{ request.user.first_name }},</h2>
                       <hr>
                       <p style="border: solid; border-style: dotted; padding: 2%; border-color: black;">Account Details</p>
                       <hr>
                       <p style="border: solid; border-style: dotted; padding: 2%; border-color: black;">
-                          {{ customer.first_name }} {{ customer.last_name }}<br><br>
-                          {{ customer.email }}
+                          {{ request.user.first_name }} {{ request.user.last_name }}<br><br>
+                          {{ request.user.email }}
                       </p>
                   </div>
               </div>
@@ -68,7 +68,7 @@
           <div class="col-lg-4">
               <div class="card">
                   <div class="card-body">
-                      <h1>Orders</h1>
+                      <h1>Transactions</h1>
                       {% if orders %}
                           {% for order in orders %}
                               <ul>
@@ -76,7 +76,8 @@
                                       <p>{{ order.details }}</p>
                                       <p>To {{ order.ship.street }}, {{ order.ship.local_government_area }}</p>
                                       <p>{{ order.ship.city }} {{ order.ship.state }}</p>
-                                      <p>Contact info: {{ order.ship.mobile }}</p>
+                                      <p>
+                                        Contact info: {{ order.ship.mobile }}</p>
                                       <p>On {{ order.time }}</p>
                                       {% if order.completed is False %}
                                           <button class="btn btn-secondary" style="background-color: gray; color: white;">Status: Order PROCESSING</button><br>
@@ -99,7 +100,7 @@
           <div class="col-lg-4">
               <div class="card">
                   <div class="card-body">
-                      <h2>Shipping Information</h2>
+                      <h2>Wallet Information</h2>
                       {% if shippings %}
                           {% for ship in shippings %}
                               <ul>
@@ -114,6 +115,29 @@
                   </div>
               </div>
           </div>
+      </div>
+<br>
+
+      <div>
+        <h2>
+            Catalouge
+        </h2>
+        {% if images %}
+        <div class="row">
+        {% for img in images %}
+        <div class="col-lg-4">
+            <img src="{{img.image.url}}" class="rounded-circle" width="200px" height="200px" alt="">
+            <h2 class="fw-normal">{{img.name}}</h2><small>By {{img.owner.artist.name}} </small>
+            <p> {{img.description|slice:150}}... <a href="{% url 'base:details' img.id %}">View more</a> </p>
+            <p><a class="btn btn-secondary" href="{% url 'base:details' img.id %}">View details »</a></p>
+        </div>
+        {% endfor %}
+    </div>
+        {% else %}
+        <p>
+            Catalouge is empty
+        </p>
+        {% endif %}
       </div>
   </div>
   </body>

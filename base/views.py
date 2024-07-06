@@ -106,6 +106,68 @@ def logout_request(request):
     return HttpResponseRedirect(reverse('base:home'))
 
 def profile(request):
-    context = {'company_name':company_name}
+    
+    images =Images.objects.filter(owner = request.user).order_by('?')
+    context = {'company_name':company_name, 'images':images}
+    
     return render(request, 'base/profile.html', context)
 
+def show(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            name = request.POST['name']
+            description = request.POST['des']
+            image = request.FILES['image']
+            Images.objects.create(name = name, description = description, image=image, owner = request.user, is_featured = False )
+            return HttpResponseRedirect(reverse('base:profile'))
+        context = {'company_name':company_name}
+        return render(request, 'base/add.html', context)
+    else:
+        return HttpResponseRedirect(reverse('base:login'))
+
+def copyright(request):
+    if request.user.is_authenticated:
+        images = Images.objects.filter(owner = request.user, is_copyright= False)
+        if request.method =='POST':
+            try:
+                image_id = request.POST['image']
+                published = request.POST['published']
+                year = request.POST['year']
+                co = request.POST['co']
+                work_type = request.POST['work-type']
+                others = request.POST['specify']
+                image = Images.objects.get(id =image_id)
+
+                Copyright.objects.create(image = image, published = published, year=year, co_authors = co, work_type = work_type, other = others)
+                product_description = f'Copyright for {image.name}'
+                cart, created = Cart.objects.get_or_create(owner = request.user)
+                cart_item = CartItem.objects.create(product_name = f'Copyright application', product_description = product_description, product_value = 50, cart= cart)
+                
+                return HttpResponseRedirect(reverse('base:pay'))
+            except(IntegrityError):
+                msg = 'You have already submitted an application for this piece of work. Please, continue with that application.'
+                
+                context = {'company_name':company_name, 'images':images, 'msg':msg}
+                return render(request, 'base/copyright.html', context)
+        
+        context = {'company_name':company_name, 'images':images}
+        return render(request, 'base/copyright.html', context)
+    else:
+        return HttpResponseRedirect(reverse('base:login'))
+    
+
+def pay(request):
+    if request.user.is_authenticated:
+        cart, created = Cart.objects.get_or_create(owner = request.user)
+        cart_items = CartItem.objects.filter(cart = cart)
+        items = []
+        for ci in cart_items:
+            items.append(ci.product_value)
+        total_cost = sum(items)
+        total_cart_items = len(items)
+        wallets = Wallet.objects.all()
+        context = {'company_name':company_name, 'wallets':wallets , 'total_cost': total_cost, 'total_cart_items':total_cart_items, 'cart_items': cart_items}
+        return render(request, 'base/pay.html', context)
+    
+    else:
+        return HttpResponseRedirect(reverse('base:login'))

@@ -1,0 +1,141 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+<div>
+    {% if msg %}
+    <p style="font-size: larger; color: red; ">
+        {{msg}}
+    </p>
+    {% endif %}
+    <h1>
+        All you need to know about copyrighting your image with {{company_name}}
+    </h1>
+    <div style="padding-left: 20px; padding-right: 20px;">
+        Registering your image with the copyright office, offers several important benefits despite automatic copyright
+        protection. Here are some key advantages
+        of registering your copyright: <br> <br>
+        <ul>
+            <li>
+                <b>Public Record:</b> Registration creates a public record of your copyright claim. This record is valid
+                worldwide and would be helpful
+                if there is ever a dispute over ownership or infringement. <br> <br>
+            </li>
+            <li>
+                <b>Prima Facie Evidence:</b> Registration establishes prima facie evidence of the validity of your
+                copyright
+                and the facts stated in the registration certificate. This evidence can be crucial in court proceedings
+                if you need to enforce your rights. <br> <br>
+            </li>
+            <li>
+                <b>Statutory Damages and Attorney's Fees:</b> If your work is registered before an infringement occurs
+                or
+                within certain time limits after publication, you may be eligible for statutory damages and attorney's
+                fees in successful copyright infringement litigation. These damages can be significant and provide a
+                strong incentive for infringers to settle. <br> <br>
+            </li>
+            <li>
+                <b>Presumption of Ownership:</b> Registration establishes a legal presumption of your ownership of the
+                copyright and the facts stated in the registration certificate. This can simplify legal proceedings by
+                shifting the burden of proof to the defendant in case of a dispute. <br> <br>
+            </li>
+            <li>
+                <b>International Protection:</b> In many countries, registration with a copyright office
+                can help provide protection for your work abroad through international copyright treaties and
+                conventions. <br> <br>
+            </li>
+        </ul>
+    </div>
+    <h2>
+        How to register your copyright under us
+    </h2>
+    <div>
+        Copyright registration procedures vary across countries, but rest assured, we manage the process meticulously
+        according to specific guidelines, ensuring all requirements are met on your behalf.
+    </div>
+
+    <h3>
+        Copyright your work
+    </h3>
+    {% if request.user.is_authenticated %}
+    {% if images %}
+
+    <div style="padding-left: 10%; padding-right: 10%;">
+        <form action="{% url 'base:copyright' %}" method="post">
+            {% csrf_token %}
+            <label for="image">Select an image to copyright</label>
+       <select name="image" class="form-control" id="image">
+        {% for img in images %}
+        <option class="form-control" value="{{img.id}}">{{img.name}}
+            
+        </option>
+        {% endfor %}
+       </select>
+            <p> <label for="published">Has been published elsewhere?</label> <br>
+                <input type="radio" value="yes" name="published"> Yes
+                <input type="radio" value="no" name="published"> No
+            </p>
+            <p>
+                <label for="year">Year of creation:</label>
+                <input type="number" id="year" name="year" class="form-control" required>
+            </p>
+            <p>
+                <label for="co">Co-authors</label>
+                <input type="text" placeholder="Leave blank if none" name="co" id="co" class="form-control">
+            </p>
+            <p> <label for="published">Work type</label> <br>
+                <input type="radio" value="photo" name="work-type" id="photo"><label for="photo">Photograph</label>
+                <input type="radio" value="2D" name="work-type" id="2D"> <label for="2D">2-D artwork</label>
+                <input type="radio" value="tech" name="work-type" id="tech"> <label for="tech"> Technical
+                    Drawing</label>
+                <input type="radio" value="paint" id="paint" name="work-type"> <label for="paint"> Paint design </label>
+                <input type="radio" value="other" id="other" name="work-type"> <label for="other">Other(Specify)</label>
+                <input type="text" name="specify" id="other" placeholder="Other">
+
+
+            </p>
+            <p>
+                <input type="checkbox" required> <span>
+                    I, {{request.user.first_name}} {{request.user.last_name}} certify that I am the author, copyright
+                    claimant of exclusive rights, or the authorized agent of
+                    the author,
+                    copyright claimant of exclusive rights of this work.
+                </span>
+            </p>
+
+            <p>
+                <b>
+                    The Application must be certified by the author, co-authors, copyright claimant, or owner of
+                    exclusive right(s),
+                    or by the authorized
+                    agent of any of the preceding.
+                 <br>
+                <small>
+                    Any person who knowingly makes a false representation of a material fact in the application
+                    for copyright registration, or in any written statement filed with the
+                    application,
+                    shall be fined not more than $2500.
+                </small>
+            </b>
+            </p>
+
+            <p>
+                <b>Warning:</b> Once you submit your application, you cannot make changes to it. Therefore,
+please review the information on this screen carefully before proceeding.
+            </p>
+
+            <button class="btn btn-primary">Proceed to payment</button>
+
+
+        </form>
+    </div>
+    {% else %}
+    <p>
+        No images to copyright. <a href="{% url 'base:show' %}">Upload one now?</a>
+    </p>
+    {% endif %}
+    {% else %}
+    <a href="{% url 'base:login' %}" class="btn btn-primary">Sign in to copyright your work</a>
+    {% endif %}
+
+</div>
+{% endblock %}
