@@ -75,7 +75,13 @@
             </ul>
         </div>
 
-
+{% if msg %}
+<div style="display: flex; justify-content: center;">
+    <p style="color: red; font-size: larger;">
+{{msg}}
+    </p>
+</div>
+{% endif %}
         <div class="container">
             <main>
                 <div class="py-5 text-center">
@@ -113,7 +119,8 @@
                     </div>
                     <div class="col-md-7 col-lg-8">
                         <h4 class="mb-3">Billing address</h4>
-                        <form class="needs-validation" novalidate="">
+                        <form method="post" action="{% url 'base:pay' %}" class="needs-validation" novalidate="">
+                            {% csrf_token %}
                             <div class="row g-3">
                                 <div class="col-sm-6">
                                     <label for="firstName" class="form-label">First name</label>
@@ -165,7 +172,7 @@
                                 {% for wallet in wallets %}
                                 <div class="form-check">
                                     <input id="credit" name="paymentMethod" type="radio" class="form-check-input"
-                                        checked="" required="">
+                                        checked="" required="" value="{{wallet.id}}">
                                     <label class="form-check-label" for="credit">{{wallet.currency}} ({{wallet.network}})</label>
                                <br>{{wallet.address}} <br> <br>
                                 </div>

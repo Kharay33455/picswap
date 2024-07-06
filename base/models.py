@@ -62,7 +62,7 @@ class Cart(models.Model):
     owner = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        f'{self.owner.username}\'s cart'
+        return f'{self.owner.username}\'s cart'
     
 class CartItem(models.Model):
     product_name = models.CharField(max_length=20)
@@ -71,4 +71,19 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
 
     def __str__(self):
-        f'{self.product_name}'
+        return f'{self.product_name}'
+
+class Transaction(models.Model):
+    transaction_id = models.CharField(max_length=20)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    wallet = models.CharField(max_length=10)
+    wallet_address = models.CharField(max_length=50)
+    total_items = models.IntegerField()
+    items = models.CharField(max_length=50)
+    cost = models.IntegerField()
+    date = models.DateTimeField(auto_now_add=True)
+    is_paid = models.BooleanField(default=False)
+    is_processed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.user} transaction on {self.date}'

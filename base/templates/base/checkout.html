@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+<main class="px-3">
+    <h1>Finish processing your payment</h1>
+    <p class="lead">Complete your wallet transfer and click "I have completed this transaction". <br><small>Note:Processing transactions can take up to 24 hours</small> </p>
+    <b><p class="lead" style="text-align: center; font-size: xx-large;">
+        Payment Method: {{transaction.wallet}}
+        <br>
+        Wallet address: {{transaction.wallet_address}}
+        <br>
+        Items in wallet: {{transaction.total_items}}
+        <br>
+        Items purchased: {{transaction.items}}
+        <br>
+        Total cost: ${{transaction.cost}}
+    </p>
+</b>
+<div style="display: flex; justify-content: center;">
+    <form action="{% url 'base:checkout' transaction.transaction_id %}" method="post">
+    {% csrf_token %}
+        <button class="btn btn-primary btn-block"  >I have completed this transfer....</button>
+</form>
+</div>
+</main>
+
+{% endblock %}

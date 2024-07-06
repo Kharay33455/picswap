@@ -4,6 +4,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+import random
 
 # Create your views here.
 company_name = Company_name.objects.first()
@@ -106,12 +107,14 @@ def logout_request(request):
     return HttpResponseRedirect(reverse('base:home'))
 
 def profile(request):
-    
-    images =Images.objects.filter(owner = request.user).order_by('?')
-    context = {'company_name':company_name, 'images':images}
-    
-    return render(request, 'base/profile.html', context)
-
+    if request.user.is_authenticated:
+        transactions = Transaction.objects.filter(user = request.user)
+        images =Images.objects.filter(owner = request.user).order_by('?')
+        context = {'company_name':company_name, 'images':images, 'transactions':transactions}
+        
+        return render(request, 'base/profile.html', context)
+    else:
+        return HttpResponseRedirect(reverse('base:login'))
 def show(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
@@ -165,9 +168,45 @@ def pay(request):
             items.append(ci.product_value)
         total_cost = sum(items)
         total_cart_items = len(items)
-        wallets = Wallet.objects.all()
-        context = {'company_name':company_name, 'wallets':wallets , 'total_cost': total_cost, 'total_cart_items':total_cart_items, 'cart_items': cart_items}
-        return render(request, 'base/pay.html', context)
+        if total_cart_items<1:
+            wallets = Wallet.objects.all()
+            msg = 'Cart is empty'
+            context = {'company_name':company_name,'msg': msg ,'wallets':wallets , 'total_cost': total_cost, 'total_cart_items':total_cart_items, 'cart_items': cart_items}
+            return render(request, 'base/pay.html', context)
+        if request.method =='POST':
+            transaction_id = random.randint(111111111111111111, 9999999999999999999)
+            wallet_id = request.POST['paymentMethod']
+            wallet = Wallet.objects.get(id =wallet_id )
+            wallet_network = wallet.currency
+            wallet_address = wallet.address
+            items=''
+            for ci in cart_items:
+                items = f'{items}, {ci.product_description}'
+            Transaction.objects.create(transaction_id=transaction_id, user = request.user, wallet = wallet_network, wallet_address = wallet_address, total_items = total_cart_items, items = items, cost = total_cost)
+            cart.delete()
+            return HttpResponseRedirect(reverse('base:checkout', args=[transaction_id]))
+
+            
+        else:
+
+            
+            wallets = Wallet.objects.all()
+            context = {'company_name':company_name, 'wallets':wallets , 'total_cost': total_cost, 'total_cart_items':total_cart_items, 'cart_items': cart_items}
+            return render(request, 'base/pay.html', context)
+        
     
+    else:
+        return HttpResponseRedirect(reverse('base:login'))
+    
+def checkout(request, t_id):
+    if request.user.is_authenticated:
+        transaction = Transaction.objects.get(transaction_id = t_id)
+
+        if request.method == 'POST':
+            transaction.is_paid = True
+            transaction.save()
+            return HttpResponseRedirect(reverse('base:profile'))
+        context = {'company_name':company_name, 'transaction':transaction}
+        return render(request, 'base/checkout.html', context)
     else:
         return HttpResponseRedirect(reverse('base:login'))

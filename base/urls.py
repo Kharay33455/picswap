@@ -16,4 +16,5 @@ urlpatterns =[
     path('show-and-tell', views.show, name="show"),
     path('learn-more-about-copyright', views.copyright, name='copyright'),
     path('pay', views.pay, name="pay"),
+    path('pay/checkout<slug:t_id>', views.checkout, name ='checkout'),
 ]
