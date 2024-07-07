@@ -70,63 +70,25 @@
             </path>
         </symbol>
     </svg>
-
+<a href="">
     <div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
-        <button class="btn btn-bd-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button"
-            aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (light)">
-            <svg class="bi my-1 theme-icon-active" width="1em" height="1em">
-                <use href="#sun-fill"></use>
-            </svg>
-            <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
-            <li>
-                <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="light"
-                    aria-pressed="true">
-                    <svg class="bi me-2 opacity-50" width="1em" height="1em">
-                        <use href="#sun-fill"></use>
-                    </svg>
-                    Light
-                    <svg class="bi ms-auto d-none" width="1em" height="1em">
-                        <use href="#check2"></use>
-                    </svg>
-                </button>
-            </li>
-            <li>
-                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark"
-                    aria-pressed="false">
-                    <svg class="bi me-2 opacity-50" width="1em" height="1em">
-                        <use href="#moon-stars-fill"></use>
-                    </svg>
-                    Dark
-                    <svg class="bi ms-auto d-none" width="1em" height="1em">
-                        <use href="#check2"></use>
-                    </svg>
-                </button>
-            </li>
-            <li>
-                <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto"
-                    aria-pressed="false">
-                    <svg class="bi me-2 opacity-50" width="1em" height="1em">
-                        <use href="#circle-half"></use>
-                    </svg>
-                    Auto
-                    <svg class="bi ms-auto d-none" width="1em" height="1em">
-                        <use href="#check2"></use>
-                    </svg>
-                </button>
-            </li>
-        </ul>
-    </div>
+        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+            <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
+          </svg>
 
+          <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-envelope-open-fill" viewBox="0 0 16 16">
+            <path d="M8.941.435a2 2 0 0 0-1.882 0l-6 3.2A2 2 0 0 0 0 5.4v.314l6.709 3.932L8 8.928l1.291.718L16 5.714V5.4a2 2 0 0 0-1.059-1.765zM16 6.873l-5.693 3.337L16 13.372v-6.5Zm-.059 7.611L8 10.072.059 14.484A2 2 0 0 0 2 16h12a2 2 0 0 0 1.941-1.516M0 13.373l5.693-3.163L0 6.873z"/>
+          </svg>
+    </div>
+</a>
 
     <!--Making the navbar here-->
 
-    <header >
-        <nav class="navbar navbar-expand-lg my-nav" >
+    <header>
+        <nav class="navbar navbar-expand-lg my_nav">
             <div class="container-fluid">
               <a class="navbar-brand" href="{% url 'base:home' %}">
-                <span>ART SWAP</span>
+                <span style="font-size: xx-large; font-weight: 900;">ART SWAP</span>
                 <img src="{% static 'images/download.jpg' %}" width="60" height="60" alt="">
               </a>
               <div data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
@@ -148,6 +110,9 @@
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'base:about' %}">About</a>
                   </li>
+                  <li>
+
+                  </li>
                 </ul>
                 <span class="navbar-text">
                     {% if request.user.is_authenticated %}
@@ -160,6 +125,9 @@
                     &nbsp;  
                     <a class="btn btn-primary" href="{% url 'base:register' %}">Sign up</a>
                     {% endif %}
+                    <div id="google_translate_element"></div>
+
+           
                 </span>
               </div>
             </div>
@@ -167,9 +135,12 @@
     </header>
 
     <main>
-        <div class="my_container box">
+        <div class=" box">
+            
         {% block content %}
         {% endblock %}
+        <br>
+        <br>
     </div>
 
      
@@ -178,8 +149,7 @@
         <!-- Marketing messaging and featurettes
   ================================================== -->
         <!-- Wrap the rest of the page in another container to center all the content. -->
-
-    
+ 
 
         <!-- FOOTER -->
         <footer class="container">
@@ -194,5 +164,12 @@
 
 
 </body>
+<script type="text/javascript">
+    function googleTranslateElementInit() {
+      new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+    }
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+ 
 
 </html>

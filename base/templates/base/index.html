@@ -20,7 +20,7 @@
                     <p><a class="btn btn-lg btn-primary" href="{% url 'base:show' %}">Show and tell</a></p>
 
                     {% else %}
-                    <p><a class="btn btn-lg btn-primary" href="#">Sign up today</a></p>
+                    <p><a class="btn btn-lg btn-primary" href="{% url 'base:register' %}">Sign up today</a></p>
                     {% endif %}
                 </div>
             </div>

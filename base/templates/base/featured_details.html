@@ -19,7 +19,7 @@
 </p>
 {% else %}
 <p> 
-    <a class="btn btn-primary" href="">Place an offer for this piece</a> 
+    <a class="btn btn-primary" href="{% url 'base:acquire' piece.id %}">Place an offer for this piece</a> 
 </p>
 {% endif %}
 {% endblock %}

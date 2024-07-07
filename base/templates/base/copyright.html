@@ -71,7 +71,7 @@
         {% endfor %}
        </select>
             <p> <label for="published">Has been published elsewhere?</label> <br>
-                <input type="radio" value="yes" name="published"> Yes
+                <input type="radio" value="yes" name="published" required> Yes
                 <input type="radio" value="no" name="published"> No
             </p>
             <p>
@@ -83,7 +83,7 @@
                 <input type="text" placeholder="Leave blank if none" name="co" id="co" class="form-control">
             </p>
             <p> <label for="published">Work type</label> <br>
-                <input type="radio" value="photo" name="work-type" id="photo"><label for="photo">Photograph</label>
+                <input required type="radio" value="photo" name="work-type" id="photo"><label for="photo">Photograph</label>
                 <input type="radio" value="2D" name="work-type" id="2D"> <label for="2D">2-D artwork</label>
                 <input type="radio" value="tech" name="work-type" id="tech"> <label for="tech"> Technical
                     Drawing</label>

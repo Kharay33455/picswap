@@ -162,16 +162,9 @@
 
 }
 
-.my-nav {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 2;
-    background-color: #FFFFFF;
-}
-.my_container{
-    padding-top:85px;
-}
+
+
+
 .carousel-img{
     width: 100%;
     height: 70%;
@@ -185,9 +178,7 @@
     .menu {
         display: none;
     }
-    .my_container{
-        padding-top: 85px;
-    }
+
     .carousel-img{
         height: 100%;
     }

@@ -17,4 +17,7 @@ urlpatterns =[
     path('learn-more-about-copyright', views.copyright, name='copyright'),
     path('pay', views.pay, name="pay"),
     path('pay/checkout<slug:t_id>', views.checkout, name ='checkout'),
+    path('featured/<int:id>28698/acquire', views.acquire, name='acquire'),
+    path('chat/<int:chat_id>', views.chat, name='chat'),
+
 ]

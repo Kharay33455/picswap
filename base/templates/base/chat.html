@@ -1,0 +1,70 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+<div>
+    <div>
+        <h1 class="about-us">
+            {{ticket.subject}}
+        </h1>
+
+        <!--Profile of support-->
+        <div style="display: flex; justify-content: center;">
+
+            <img src="{{ticket.support.pfp.url}}" alt="" class="support_pfp"> <br>
+
+        </div>
+        <p style="text-align: center;">
+            <b>
+                {{ticket.support.name}}
+
+            </b>
+            <br>
+            typically replies in an hour
+        </p>
+    </div>
+
+    <div>
+        <!--Messages-->
+        {% for msg in messages %}
+        {% if msg.from_support %}
+        <p class="list-group-item list-group-item-primary" style="width: 65%; padding-bottom: 5%;">
+            {% else %}
+        <p class="list-group-item list-group-item-success" style="width: 65%; margin-left: 35%;  padding-bottom: 5%;">
+            {% endif %}
+
+
+            {% if msg.image %}
+            <img src="{{msg.image.url}}" alt="" style="width: 100%;">
+
+            {% endif %} <br>
+            {%if msg.body%}
+            {{msg.body}}
+            {% endif %}
+            <br>
+            <small class="datess">
+                {{msg.time_sent}}
+            </small>
+        </p>
+        <hr>
+        {% endfor %}
+    </div>
+    <div>
+        <form action="{% url 'base:ticket' ticket.ticket_id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="image">Attach image below</label>
+                <input type="file" class="form-control-file" id="image" accept="image/*" name="image">
+              </div>
+
+            <div class="form-group">
+                <textarea class="form-control" placeholder="Enter your message in 100 characters or less." name="body"
+                    rows="3" maxlength="100"></textarea>
+        </div>
+        <button class="btn-block btn-primary" type="submit">Send</button>
+        </form>
+<br>
+    </div>
+
+</div>
+{%endblock%}

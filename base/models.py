@@ -7,10 +7,13 @@ class Company_name(models.Model):
     name = models.CharField(max_length=20)
     def __str__(self):
         return f'{self.name}'
+    
 
 class Artist(models.Model):
     name = models.CharField(max_length=30)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    has_new_message = models.BooleanField(default=False)
+    
     
 
     def __str__(self):
@@ -31,6 +34,7 @@ class Images(models.Model):
 class Buyer(models.Model):
     name = models.CharField(max_length = 30)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    has_new_message = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.name}'
@@ -87,3 +91,27 @@ class Transaction(models.Model):
 
     def __str__(self):
         return f'{self.user} transaction on {self.date}'
+
+
+class Chat(models.Model):
+    chat_id = models.CharField(max_length=20)
+    subject = models.CharField(max_length=30)
+    buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE)
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
+    piece = models.ForeignKey(Images, on_delete=models.CASCADE)
+
+    
+
+    def __str__(self):
+        return f'Chat between {self.buyer} and {self.artist}'
+    
+
+class Message(models.Model):
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    from_artist =models.BooleanField()
+    body = models.CharField(max_length=100, blank=True, null=True)
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
+
+    def __str__(self):
+        return f'Message from {self.chat}'

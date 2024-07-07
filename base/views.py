@@ -210,3 +210,25 @@ def checkout(request, t_id):
         return render(request, 'base/checkout.html', context)
     else:
         return HttpResponseRedirect(reverse('base:login'))
+    
+
+def acquire(request, id):
+    if request.user.is_authenticated:
+        piece = Images.objects.get(id = id)
+        if request.method =='POST':
+            chat = Chat.objects.create()
+
+        
+        context = {'company_name':company_name, 'piece':piece}
+        return render(request, 'base/acquire.html', context)
+    
+    else:
+        return HttpResponseRedirect(reverse('base:login'))
+    
+def chat(request, chat_id):
+    if request.user.is_authenticated:
+        chat = Chat.objects.get(chat_id = chat_id)
+        context = {'chat':chat}
+        return render(request, 'base/chat.html', context)
+    else:
+        return HttpResponseRedirect(reverse('base:login'))

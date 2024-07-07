@@ -1,0 +1,47 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+<div>
+    <div style="display: flex; justify-content: center; ">
+        <img class="rounded-circle" height="250" width="250" src="{{piece.image.url}}" alt=""> <br>
+
+    </div>
+    <br>
+    <div style="text-align: center;">
+        <b>
+            <div style="text-align: center; font-size: xx-large;">
+                Owner: {{piece.owner.first_name}} {{piece.owner.last_name}}
+
+            </div>
+
+        </b>
+        <div style="font-size: large;">
+            @{{piece.owner.username}}
+        </div>
+
+        <p style="padding: 2%;">
+            <b style="font-size: x-large;">190</b> Followers
+        </p>
+        <div style=" display: flex; justify-content: center; ">
+            <p style="width: 50%;">
+                {{piece.description|slice:150}}....
+            </p> <br> <br>
+        </div>
+        <form action="{% url 'base:aquire' piece.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-bd-primary">Acquire</button>
+        </form>
+
+    </div>
+
+
+
+
+
+    <div style="text-align: center; margin: 5%; display: flex; justify-content: center;">
+        <p style="padding: 1%; background-color: gray; width: 50%; border-radius: 5%;">
+            Joined {{piece.owner.date_joined}}
+        </p>
+    </div>
+</div>
+{% endblock %}
