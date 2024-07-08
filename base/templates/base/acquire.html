@@ -27,7 +27,7 @@
                 {{piece.description|slice:150}}....
             </p> <br> <br>
         </div>
-        <form action="{% url 'base:aquire' piece.id %}" method="post">
+        <form action="{% url 'base:acquire' piece.id %}" method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-bd-primary">Acquire</button>
         </form>

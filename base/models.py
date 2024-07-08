@@ -13,8 +13,9 @@ class Artist(models.Model):
     name = models.CharField(max_length=30)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     has_new_message = models.BooleanField(default=False)
-    
-    
+    pfp = models.ImageField(blank=True, null=True, upload_to='images')
+    available_balance = models.IntegerField(default=0)
+    uncleared_balance = models.IntegerField(default=0)
 
     def __str__(self):
         return f'{self.name}'
@@ -35,6 +36,7 @@ class Buyer(models.Model):
     name = models.CharField(max_length = 30)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     has_new_message = models.BooleanField(default=False)
+    pfp = models.ImageField(blank=True, null=True, upload_to='images/pfp')
 
     def __str__(self):
         return f'{self.name}'
@@ -99,6 +101,10 @@ class Chat(models.Model):
     buyer = models.ForeignKey(Buyer, on_delete=models.CASCADE)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
     piece = models.ForeignKey(Images, on_delete=models.CASCADE)
+    read_by_artist = models.BooleanField()
+    read_by_buyer = models.BooleanField()
+    date_of_creation = models.DateTimeField(auto_now_add=True)
+    offer = models.IntegerField(blank=True, null=True)
 
     
 
@@ -110,8 +116,73 @@ class Message(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     from_artist =models.BooleanField()
-    body = models.CharField(max_length=100, blank=True, null=True)
+    body = models.TextField(blank=True, null=True)
     image = models.ImageField(upload_to='images/', blank=True, null=True)
 
     def __str__(self):
         return f'Message from {self.chat}'
+
+
+
+
+"""Support functionality"""
+    
+"""Implementing the support function"""
+class Support(models.Model):
+    name = models.CharField(max_length=30)
+    location = models.CharField(max_length=20)
+    pfp = models.ImageField(upload_to='images/')
+
+    def __str__(self):
+        return f'{self.name}'
+    
+class Ticket(models.Model):
+    ticket_id = models.CharField(max_length=20)
+    subject = models.CharField(max_length=30)
+    artist = models.ForeignKey(Artist, on_delete=models.CASCADE)
+    support = models.ForeignKey(Support, on_delete=models.CASCADE)
+    is_read= models.BooleanField(default=False)
+    date_of_creation = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.subject} ticket by {self.artist.user.username} on {self.date_of_creation}//Is read? {self.is_read}'
+    
+
+class Support_Message(models.Model):
+    ticket = models.ForeignKey(Ticket, on_delete = models.CASCADE)
+    body = models.TextField(blank=True, null=True)
+    image = models.ImageField(upload_to='images/', blank=True, null=True)
+    from_support = models.BooleanField(default=False)
+    time_sent = models.DateTimeField(auto_now_add=True)
+    is_replied = models.BooleanField(default=False)
+
+
+    def save(self, *args, **kwargs):
+        if self.from_support == True:
+            self.ticket.is_read = False
+            self.ticket.save()
+            self.ticket.artist.has_new_message = True
+            self.ticket.artist.save()
+        super(Support_Message, self).save(*args, **kwargs)
+
+    def __str__(self):
+        if self.from_support == True:
+            return f'Reply to {self.ticket.artist.user.first_name} {self.ticket.artist.user.last_name} / is_replied? {self.is_replied}'
+        else:
+            return f'Message from {self.ticket.artist.user.first_name} {self.ticket.artist.user.last_name} / is_replied? {self.is_replied}'
+
+
+
+
+"""Record successfull swaps"""
+class Swap(models.Model):
+    swap_id = models.CharField(max_length=20)
+    buyer = models.CharField(max_length=30)
+    artist = models.CharField(max_length=30)
+    piece = models.CharField(max_length=30)
+    piece_description = models.TextField()
+    price = models.IntegerField()
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        f'{self.artist} sold {self.piece} to {self.buyer} at {self.price} on {self.date}'

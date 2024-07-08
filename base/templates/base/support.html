@@ -1,0 +1,101 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{%block content%}
+<script>
+    function issue(){
+        if (document.getElementById('Issue').style.display = 'none'){
+            document.getElementById('Issue').style.display = 'block'
+        }
+       
+    }
+    function closeIssue(){
+        if(document.getElementById('Issue').style.display = 'block'){
+            document.getElementById('Issue').style.display = 'none'
+        }
+    }
+</script>
+
+<div>
+    <div>
+        <h1 class="about-us">
+            Support and Messages
+        </h1>
+
+
+        
+        <div class="new-issue" id="Issue">
+            <div class="close-icon">
+                <button onclick="closeIssue()" class="btn btn-outline-danger">
+
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-x-square-fill" viewBox="0 0 16 16">
+                    <path
+                        d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm3.354 4.646L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708" />
+                </svg>
+            </button>
+
+            </div>
+            <div>
+           <form action="{% url 'base:new_issue' %}" method="post">
+            {% csrf_token %}
+            <h2>
+                New chat
+            </h2>
+            <br>
+            <div class="form-group">
+                <input placeholder="Conversation subject*" maxlength="20" class="form-control" name="subject" required/>
+                <br>
+                <textarea class="form-control" placeholder="Describe your issue in 100 lines or less..*" name="body" required maxlength="100"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Start chat</button>
+           </form>
+
+            </div>
+        </div>
+
+
+        <p class="principles-text">
+            We're always here for you...
+        </p>
+    </div>
+    <br>
+    <div style="position: relative;">
+     
+        <button onclick="issue()" class="btn btn-outline-success">
+            New chat
+        </button>
+    </div>
+
+    <br>
+    <!--Tickets-->
+
+    <ul class="list-group">
+        {% for ticket in tickets %}
+        <!--Check if ticket is read and displays green for unread and gray for read-->
+        <a class="links" href="{% url 'base:ticket' ticket.ticket_id %}">
+
+            {% if ticket.is_read %}
+
+
+            <li class="list-group-item list-group-item-dark">
+
+                {% else %}
+
+            <li class="list-group-item list-group-item-success">
+                {% endif %}
+
+                <img src="{{ticket.support.pfp.url}}" alt="" class="support_pfp">
+                {{ticket.subject}} <br>
+                <small class="datess"> {{ticket.date_of_creation}} </small>
+        </a>
+
+
+        </li>
+
+        {% endfor %}
+
+    </ul>
+    <br>
+    <!--Ticket ends-->
+</div>
+{%endblock%}

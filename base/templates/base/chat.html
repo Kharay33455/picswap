@@ -4,33 +4,54 @@
 <div>
     <div>
         <h1 class="about-us">
-            {{ticket.subject}}
+            {{chat.subject}}
         </h1>
 
         <!--Profile of support-->
         <div style="display: flex; justify-content: center;">
+            {% if buyer.pfp %}
+            <img src="{{buyer.pfp.url}}" alt="" class="support_pfp">
+            {% else %}
+            <img src="{% static 'images/blank.png' %}" alt="" class="support_pfp">
+            {% endif %}
+            &nbsp;
+            {% if artist.pfp %}
+            <img src="{{artist.pfp.url}}" alt="" class="support_pfp">
+            {% else %}
+            <img src="{% static 'images/blank.png' %}" alt="" class="support_pfp">
+            {% endif %}
 
-            <img src="{{ticket.support.pfp.url}}" alt="" class="support_pfp"> <br>
 
         </div>
-        <p style="text-align: center;">
-            <b>
-                {{ticket.support.name}}
-
-            </b>
-            <br>
-            typically replies in an hour
-        </p>
     </div>
 
-    <div>
+    <div style="margin-bottom: 160px;">
         <!--Messages-->
         {% for msg in messages %}
-        {% if msg.from_support %}
-        <p class="list-group-item list-group-item-primary" style="width: 65%; padding-bottom: 5%;">
+
+
+        {% if chat.buyer.user == request.user %}
+        {% if msg.from_artist %}
+        <p class="list-group-item list-group-item-primary" style="width: 65%; padding: 1%; padding-bottom: 5%;">
             {% else %}
-        <p class="list-group-item list-group-item-success" style="width: 65%; margin-left: 35%;  padding-bottom: 5%;">
+        <p class="list-group-item list-group-item-success"
+            style="width: 65%; margin-left: 35%; padding: 1%; padding-bottom: 5%;">
             {% endif %}
+            {% else %}
+
+            {% if msg.from_artist %}
+        <p class="list-group-item list-group-item-success"
+            style="width: 65%; margin-left: 35%; padding: 1%; padding-bottom: 4%;">
+            {% else %}
+        <p class="list-group-item list-group-item-primary" style="width: 65%;  padding: 1%; padding-bottom: 4%;">
+            {% endif %}
+
+
+
+            {% endif %}
+
+
+
 
 
             {% if msg.image %}
@@ -42,29 +63,66 @@
             {% endif %}
             <br>
             <small class="datess">
-                {{msg.time_sent}}
+                {{msg.date}}
             </small>
         </p>
         <hr>
         {% endfor %}
     </div>
-    <div>
-        <form action="{% url 'base:ticket' ticket.ticket_id %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
+    <div style="position: relative;">
+        <div style="position: fixed; bottom: 0; width: 100%; background-color: white;">
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
 
-            <div class="form-group">
-                <label for="image">Attach image below</label>
-                <input type="file" class="form-control-file" id="image" accept="image/*" name="image">
-              </div>
+                <div class="form-group">
+                    <label for="image">Attach image below</label>
+                    <input type="file" class="form-control-file" id="image" accept="image/*" name="image">
+                </div>
 
+                <div class="form-group">
+                    <textarea class="form-control" placeholder="Start typing message." name="body" rows="3"
+                        maxlength="100"></textarea>
+                </div>
+                <div style="display: flex;">
+                    <button class="btn btn-bd-primary" type="submit">Send</button>
+
+                </div>
+            </form>
+            {% if request.user == chat.buyer.user %}
+            {% if chat.offer %}
+            <b>{{chat.artist}}</b> is yet to accept your bid of <b>${{chat.offer}}</b>.
+            {% else %}
             <div class="form-group">
-                <textarea class="form-control" placeholder="Enter your message in 100 characters or less." name="body"
-                    rows="3" maxlength="100"></textarea>
+                <form action="{% url 'base:offer' chat.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="number" name="offer" required>
+                    <button type="submit" class="btn btn-bd-primary">Make offer</button>
+                </form>
+
+            </div>
+            {% endif %}
+            {% else %}
+            {% if chat.offer %}
+            <span>
+                <b>{{chat.buyer}}</b> bid for <b>${{chat.offer}}.</b> <a href="{% url 'base:swap' chat.chat_id %}" class="btn btn-success">Accept</a> <button
+                    class="btn btn-danger">Reject</button>
+            </span>
+            {% else %}
+            <div><b>
+                    {{chat.buyer}} hasn't made an offer.
+                </b>
+            </div>
+            {% endif %}
+            {% endif %}
+            <br>
         </div>
-        <button class="btn-block btn-primary" type="submit">Send</button>
-        </form>
-<br>
     </div>
 
 </div>
+<script>
+    // Scroll to the bottom of the page on load
+    window.onload = function () {
+        window.scrollTo(0, document.body.scrollHeight);
+    };
+</script>
 {%endblock%}

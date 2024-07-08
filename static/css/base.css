@@ -11,6 +11,9 @@
         font-size: 3.5rem;
     }
 }
+.bi-trash-fill{
+    color: red;
+}
 
 .b-example-divider {
     width: 100%;
@@ -19,6 +22,16 @@
     border: solid rgba(0, 0, 0, .15);
     border-width: 1px 0;
     box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+}
+.support_pfp {
+    width: 50px;
+    height: 50px;
+    display: inline;
+    border-radius: 50%;
+}
+.datess {
+    display: flex;
+    float: inline-end;
 }
 
 .b-example-vr {
@@ -29,7 +42,34 @@
 
 .bi {
     vertical-align: -.125em;
-    fill: white;
+    fill: green;
+}
+.bi-arrow-up-circle-fill{
+    color: #6528e0;
+}
+
+.bi-envelope-exclamation-fill{
+    color: #5a23c8;
+}
+
+.bi-envelope-open-fill{
+    color: #6528e0;
+}
+.new-issue{
+    position: fixed;
+    width: 100%;
+    background-color: rgba(30, 140, 190, 0.9);
+    z-index: 2;
+    padding: 10%;
+    display: none;
+}
+.principles-text {
+    font-weight: 700;
+    font-size: large;
+    width: 70%;
+    margin-left: 10%;
+    padding-bottom: 10px;
+
 }
 
 

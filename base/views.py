@@ -108,9 +108,10 @@ def logout_request(request):
 
 def profile(request):
     if request.user.is_authenticated:
+        total = request.user.artist.available_balance + request.user.artist.uncleared_balance 
         transactions = Transaction.objects.filter(user = request.user)
         images =Images.objects.filter(owner = request.user).order_by('?')
-        context = {'company_name':company_name, 'images':images, 'transactions':transactions}
+        context = {'company_name':company_name, 'images':images, 'transactions':transactions, 'total':total}
         
         return render(request, 'base/profile.html', context)
     else:
@@ -216,7 +217,13 @@ def acquire(request, id):
     if request.user.is_authenticated:
         piece = Images.objects.get(id = id)
         if request.method =='POST':
-            chat = Chat.objects.create()
+            chat_id = random.randint(111111111111111, 999999999999999999)
+            subject = f'Bid for {piece.name}'
+            buyer = Buyer.objects.get(user = request.user)
+            artist = Artist.objects.get(user = piece.owner)
+            chat = Chat.objects.create(chat_id = chat_id, subject=subject, buyer=buyer, artist=artist, piece=piece, read_by_artist = False, read_by_buyer = True)
+            Message.objects.create(chat = chat, from_artist =False, body = 'Hi, is this still available?', image = piece.image)
+            return HttpResponseRedirect(reverse('base:chat', args=[chat.chat_id]))
 
         
         context = {'company_name':company_name, 'piece':piece}
@@ -228,7 +235,214 @@ def acquire(request, id):
 def chat(request, chat_id):
     if request.user.is_authenticated:
         chat = Chat.objects.get(chat_id = chat_id)
-        context = {'chat':chat}
-        return render(request, 'base/chat.html', context)
+        buyer = Buyer.objects.get(user = chat.buyer.user)
+        artist = Artist.objects.get(user = chat.artist.user)
+        if request.method == 'POST':
+            if request.FILES:
+                image = request.FILES['image']
+                body = request.POST['body']
+                if request.user == artist.user:
+                    Message.objects.create(chat = chat, body = body, image= image, from_artist = True)
+                    buyer.has_new_message = True
+                    buyer.save()
+                    chat.read_by_buyer = False
+                    chat.save()
+                 
+                else:
+                    new_message = Message.objects.create(chat = chat, body=body, image=image, from_artist = False)
+                    artist.has_new_message=True
+                    artist.save()
+                    chat.read_by_artist = False
+                    chat.save()
+
+       
+
+            
+
+
+                return HttpResponseRedirect(reverse('base:chat', args=[chat.chat_id]))
+            else:
+                if request.POST['body'].strip()=="":
+                    return HttpResponseRedirect(reverse('base:chat', args=[chat.chat_id]))
+                else:
+                    body = request.POST['body']
+                    if request.user == artist.user:
+                        Message.objects.create(chat = chat, body=body, from_artist = True)
+                        buyer.has_new_message=True
+                        buyer.save()
+                        chat.read_by_buyer = False
+                        chat.save()
+                    else:
+                    
+                        new_message = Message.objects.create(chat = chat, body=body, from_artist = False)
+                        artist.has_new_message = True
+                        artist.save()
+                        chat.read_by_artist = False
+                        chat.save()
+
+           
+
+             
+                
+                    return HttpResponseRedirect(reverse('base:chat', args=[chat.chat_id]))
+
+        else:
+            if request.user == chat.buyer.user:
+                chat.read_by_buyer = True
+                chat.save()
+            else:
+                chat.read_by_artist = True
+                chat.save()
+
+
+            messages = Message.objects.filter(chat = chat)
+            context = {'chat':chat, 'buyer':buyer, 'artist':artist, 'messages':messages}
+            return render(request, 'base/chat.html', context)
+    else:
+        return HttpResponseRedirect(reverse('base:login'))
+    
+
+
+def chats(request):
+    if request.user.is_authenticated:
+        request.user.buyer.has_new_message = False
+        request.user.buyer.save()
+        request.user.artist.has_new_message = False
+        request.user.artist.save()
+
+        sell_chats = Chat.objects.filter(artist = request.user.artist)
+        buy_chats = Chat.objects.filter(buyer = request.user.buyer)
+        context = {'sell_chats':sell_chats, 'buy_chats': buy_chats}
+        return render(request, 'base/chats.html', context)
+    else:
+        return HttpResponseRedirect(reverse('base:login'))
+    
+
+    
+"""support"""
+def support(request):
+    company_name = Company_name.objects.first()
+    if request.user.is_authenticated:
+        artist = Artist.objects.get(user = request.user)
+        tickets = Ticket.objects.filter(artist = artist)
+        context = {'artist':artist, 'company_name':company_name,'tickets':tickets}
+        return render(request, 'base/support.html', context)
+    else:
+        return HttpResponseRedirect(reverse('base:login'))
+    
+
+"""Ticket"""
+
+def ticket(request, number):
+    company_name = Company_name.objects.first()
+    if request.user.is_authenticated:
+        artist = Artist.objects.get(user = request.user)
+        ticket = Ticket.objects.get(ticket_id = number, artist= artist)
+        if request.method == 'POST':
+            if request.FILES:
+                image = request.FILES['image']
+                body = request.POST['body']
+                new_message = Support_Message.objects.create(ticket = ticket, body=body, image=image)
+
+
+                return HttpResponseRedirect(reverse('base:ticket', args=[number]))
+            else:
+                if request.POST['body'].strip()=="":
+                    return HttpResponseRedirect(reverse('base:ticket', args=[number]))
+                else:
+
+                    body = request.POST['body']
+                    new_message = Support_Message.objects.create(ticket = ticket, body=body)
+                
+                    return HttpResponseRedirect(reverse('base:ticket', args=[number]))
+                
+        
+        else:
+            ticket.is_read = True
+            artist.has_new_message = False
+            ticket.save()
+            artist.save()
+            messages = Support_Message.objects.filter(ticket = ticket).order_by('time_sent')
+
+            context = {'artist':artist, 'company_name':company_name, 'ticket':ticket, 'messages':messages}
+            return render(request, 'base/ticket.html', context)
+    else:
+        return HttpResponseRedirect(reverse('base:login'))    
+    
+def new_issue(request):
+    
+    if request.user.is_authenticated:
+        request.method =='POST'
+        artist = Artist.objects.get(user = request.user)
+        ticket_id = random.randint(111111111111111111,9999999999999999999)
+        subject = request.POST['subject']
+        support = Support.objects.order_by('?').first()
+        new_ticket = Ticket.objects.create(ticket_id = ticket_id, subject=subject, artist=artist, support = support, is_read = True)
+        body = request.POST['body']
+        new_message = Support_Message.objects.create(ticket = new_ticket, body=body)
+        reply_message = Support_Message.objects.create(ticket=new_ticket, body ='We will reply you shortly. Note; This message is auto-generated.', from_support = True)
+        return HttpResponseRedirect(reverse('base:ticket', args= [ticket_id]))        
+    else:
+        return HttpResponseRedirect(reverse('base:login'))
+    
+
+def pfp(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            photo = request.FILES['photo']
+            request.user.buyer.pfp = photo
+            request.user.buyer.save()
+            request.user.artist.pfp = request.user.buyer.pfp
+            request.user.artist.save()
+            return HttpResponseRedirect(reverse('base:profile'))
+        else:
+            request.user.buyer.pfp.delete()
+            request.user.artist.pfp.delete()
+            return HttpResponseRedirect(reverse('base:profile'))
+    else:
+        return HttpResponseRedirect(reverse('base:login'))
+    
+
+def delete_cart_item(request, id):
+    if request.user.is_authenticated:
+        CartItem.objects.get(id = id).delete()
+        return HttpResponseRedirect(reverse('base:pay'))
+
+    else:
+        return HttpResponseRedirect(reverse('base:login'))
+
+def delete_art_piece(request, id):
+    if request.user.is_authenticated:
+        Images.objects.get(id = id).delete()
+        return HttpResponseRedirect(reverse('base:profile'))
+
+    else:
+        return HttpResponseRedirect(reverse('base:login')) 
+    
+def offer(request, id):
+    if request.user.is_authenticated:
+        request.method = 'POST'
+        offer = request.POST['offer']
+        chat = Chat.objects.get(id = id)
+        chat.offer = offer
+        chat.save()
+        return HttpResponseRedirect(reverse('base:chat', args=[chat.chat_id]))
+    
+
+
+    else:
+        return HttpResponseRedirect(reverse('base:login'))
+    
+def swap(request, chat_id):
+    if request.user.is_authenticated:
+        chat = Chat.objects.get(chat_id = chat_id)
+        chat.artist.uncleared_balance+=chat.offer
+        chat.artist.save()
+        chat.piece.owner = chat.buyer.user
+        chat.piece.save()
+        Swap.objects.create(swap_id = chat_id, buyer = chat.buyer.name, artist = chat.artist.name, piece = chat.piece.name, piece_description = chat.piece.description, price = chat.offer)
+        return HttpResponseRedirect(reverse('base:profile'))
+    
+    
     else:
         return HttpResponseRedirect(reverse('base:login'))

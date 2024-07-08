@@ -55,6 +55,42 @@
                   <div class="card-body">
                       <h2>Welcome {{ request.user.first_name }},</h2>
                       <hr>
+                      <div style="display: flex; justify-content: center;">
+                        
+                    <img 
+                    {% if request.user.artist.pfp %}
+                    src="{{request.user.artist.pfp.url}}"
+                    {% else %}
+                    src="{% static 'images/blank.png' %}"
+                    {% endif %}
+                    
+                    alt="" class="support_pfp"> <br>
+                
+                      </div>
+                      <div style="display: flex; justify-content: center;">
+                        <button onclick="var photo = document.getElementById('photo'); photo.style.display = (photo.style.display === 'none') ? 'block' : 'none';">
+                        Change profile photo
+                    </button>
+
+                    
+                </div>
+                <div id="photo" style="display: none; ">
+                    <div>
+                <form action="{% url 'base:pfp' %}"  method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" class="form-control" name="photo" required> 
+                    <div style="display: flex;">
+                    <button type="submit" class="btn btn-bd-primary" >Change</button>
+
+                </form>
+                <a href="{% url 'base:pfp' %}" class="btn btn-warning">Delete</a>
+                
+                <button type="submit" class="btn btn-danger" onclick="var photo = document.getElementById('photo'); photo.style.display = (photo.style.display === 'block') ? 'none' : 'block';">Close</button>
+            
+            </div>
+        </div>
+            </div>
+                      <hr>
                       <p style="border: solid; border-style: dotted; padding: 2%; border-color: black;">Account Details</p>
                       <hr>
                       <p style="border: solid; border-style: dotted; padding: 2%; border-color: black;">
@@ -98,7 +134,7 @@
                                             Items in cart:{{t.items}}
                                         </p>
                                         <p>
-                                            Total cost: {{t.cost}}
+                                            Total cost: ${{t.cost}}
                                         </p>
                                         <p>
                                             Date: {{t.date}}
@@ -124,18 +160,68 @@
           <div class="col-lg-4">
               <div class="card">
                   <div class="card-body">
+                    <div>
                       <h2>Wallet Information</h2>
-                      {% if shippings %}
-                          {% for ship in shippings %}
-                              <ul>
-                                  <li>
-                                      {{ ship.street }}, <br> {{ ship.local_government_area }}, <br>{{ ship.city }} <br>{{ ship.state }} <br> +234{{ ship.mobile }}
-                                  </li>
-                              </ul>
-                          {% endfor %}
-                      {% else %}
-                          <p>No Shipping Information Available.</p>
-                      {% endif %}
+                      <ul class="list-group mb-3">
+                       
+
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Total Balance(USD)</span>
+                            <strong>${{total}}</strong>
+                        </li>
+                        
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Available Balance(USD)</span>
+                            <strong>${{request.user.artist.available_balance}}</strong>
+                        </li>
+
+                        
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Uncleared Balance(USD)</span>
+                            <strong>${{request.user.artist.uncleared_balance}}</strong>
+                        </li>
+                    </ul>
+                </div>
+<br>
+<hr>
+                <div>
+                    <h2>
+                        Swap History
+                    </h2>
+                    <small>These records are public</small>
+                    <ul class="list-group mb-3">
+                       
+
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Piece name:</span>
+                            <strong></strong>
+                        </li>
+
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Artist:</span>
+                            <strong></strong>
+                        </li>
+
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Bought by:</span>
+                            <strong></strong>
+                        </li>
+
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Date:</span>
+                            <strong></strong>
+                        </li>
+
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>Transaction ID:</span>
+                            <strong></strong>
+                        </li>
+
+
+                    </ul>
+
+                </div>
+
                   </div>
               </div>
           </div>

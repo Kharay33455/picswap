@@ -1,0 +1,99 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+<h1>
+    <b>
+        Chats
+    </b>
+</h1>
+<br>
+<div>
+    <div>
+        {% if sell_chats %}
+        <h2>
+            Sell art chats
+        </h2>
+        <ul class="list-group">
+            {% for sc in sell_chats %}
+            <a href="{% url 'base:chat' sc.chat_id %}">
+
+                {% if sc.read_by_artist == True %}
+                <li class="list-group-item list-group-item-dark">
+                    {% else %}
+
+                <li class="list-group-item list-group-item-primary">
+                    {% endif %}
+
+
+                    <img 
+                    {% if sc.buyer.pfp %}
+                    src="{{sc.buyer.pfp.url}}"
+                    {% else %}
+                    src="{% static 'images/blank.png' %}"
+                    {% endif %}
+                    
+                    alt="" class="support_pfp">
+                    {{sc.subject}} <br>
+                    <small class="datess"> {{sc.date_of_creation}} </small>
+
+                </li>
+            </a>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div>
+            <h2>
+                No sell art chats
+            </h2>
+        </div>
+        {% endif %}
+        <br>
+<hr>
+
+        {% if buy_chats %}
+        <h2>
+            Buy art chats
+        </h2>
+        <ul class="list-group">
+            {% for bc in buy_chats %}
+            <a href="{% url 'base:chat' bc.chat_id %}">
+
+                {% if bc.read_by_buyer == True %}
+                <li class="list-group-item list-group-item-dark">
+
+                    {% else %}
+
+                <li class="list-group-item list-group-item-primary">
+                    {% endif %}
+
+
+                  
+
+                    <img 
+                    {% if bc.artist.pfp %}
+                    src="{{bc.artist.pfp.url}}"
+                    {% else %}
+                    src="{% static 'images/blank.png' %}"
+                    {% endif %}
+                    
+                    alt="" class="support_pfp">
+                    {{bc.subject}} <br>
+                    <small class="datess"> {{bc.date_of_creation}} </small>
+
+                </li>
+
+
+
+            </a>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <div>
+            <h2>
+                No buy art chats
+            </h2>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
