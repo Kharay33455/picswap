@@ -6,251 +6,310 @@
 
 
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Create three unequal columns that floats next to each other */
+        .column {
+            float: left;
+            padding: 10px;
+            height: 300px;
+            /* Should be removed. Only for demonstration */
+        }
 
+        /* Left and right column */
+        .column.side {
+            width: 25%;
+        }
 
+        /* Middle column */
+        .column.middle {
+            width: 50%;
+        }
 
-/* Create three unequal columns that floats next to each other */
-.column {
-  float: left;
-  padding: 10px;
-  height: 300px; /* Should be removed. Only for demonstration */
-}
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
 
-/* Left and right column */
-.column.side {
-  width: 25%;
-}
-
-/* Middle column */
-.column.middle {
-  width: 50%;
-}
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-/* Responsive layout - makes the three columns stack on top of each other instead of next to each other 
+        /* Responsive layout - makes the three columns stack on top of each other instead of next to each other 
 @media (max-width: 600px) {
   .column.side, .column.middle {
     width: 100%;
   }
 }
 */
-</style>
+    </style>
 </head>
+
 <body>
-    <div style="padding: 1%;" >
-    <h1>Account Overview <span style="float: inline-end;"><a href="{% url 'base:pay' %}">View cart</a></span></h1>
-    <div class="container">
-      <div class="row">
-          <div class="col-lg-4">
-              <div class="card">
-                  <div class="card-body">
-                      <h2>Welcome {{ request.user.first_name }},</h2>
-                      <hr>
-                      <div style="display: flex; justify-content: center;">
-                        
-                    <img 
-                    {% if request.user.artist.pfp %}
-                    src="{{request.user.artist.pfp.url}}"
-                    {% else %}
-                    src="{% static 'images/blank.png' %}"
-                    {% endif %}
-                    
-                    alt="" class="support_pfp"> <br>
-                
-                      </div>
-                      <div style="display: flex; justify-content: center;">
-                        <button onclick="var photo = document.getElementById('photo'); photo.style.display = (photo.style.display === 'none') ? 'block' : 'none';">
-                        Change profile photo
-                    </button>
+    <div style="padding: 1%;">
+        <h1>Account Overview <span style="float: inline-end;"><a href="{% url 'base:pay' %}">View cart</a></span></h1>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2>Welcome {{ request.user.first_name }},</h2>
+                            <hr>
+                            <div style="display: flex; justify-content: center;">
 
-                    
+                                <img {% if request.user.artist.pfp %} src="{{request.user.artist.pfp.url}}" {% else %}
+                                    src="{% static 'images/blank.png' %}" {% endif %} alt="" class="support_pfp"> <br>
+
+                            </div>
+                            <div style="display: flex; justify-content: center;">
+                                <button
+                                    onclick="var photo = document.getElementById('photo'); photo.style.display = (photo.style.display === 'none') ? 'block' : 'none';">
+                                    Change profile photo
+                                </button>
+
+
+                            </div>
+                            <div id="photo" style="display: none; ">
+                                <div>
+                                    <form action="{% url 'base:pfp' %}" method="post" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <input type="file" class="form-control" name="photo" required>
+                                        <div style="display: flex;">
+                                            <button type="submit" class="btn btn-bd-primary">Change</button>
+
+                                    </form>
+                                    <a href="{% url 'base:pfp' %}" class="btn btn-warning">Delete</a>
+
+                                    <button type="submit" class="btn btn-danger"
+                                        onclick="var photo = document.getElementById('photo'); photo.style.display = (photo.style.display === 'block') ? 'none' : 'block';">Close</button>
+
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        <p style="border: solid; border-style: dotted; padding: 2%; border-color: black;">Account
+                            Details</p>
+                        <hr>
+                        <p style="border: solid; border-style: dotted; padding: 2%; border-color: black;">
+                            {{ request.user.first_name }} {{ request.user.last_name }}<br><br>
+                            {{ request.user.email }} <br> <br> {{request.user.artist.swaps_completed}} swap(s) completed.
+                        </p>
+                    </div>
                 </div>
-                <div id="photo" style="display: none; ">
-                    <div>
-                <form action="{% url 'base:pfp' %}"  method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <input type="file" class="form-control" name="photo" required> 
-                    <div style="display: flex;">
-                    <button type="submit" class="btn btn-bd-primary" >Change</button>
+            </div>
 
-                </form>
-                <a href="{% url 'base:pfp' %}" class="btn btn-warning">Delete</a>
-                
-                <button type="submit" class="btn btn-danger" onclick="var photo = document.getElementById('photo'); photo.style.display = (photo.style.display === 'block') ? 'none' : 'block';">Close</button>
-            
-            </div>
-        </div>
-            </div>
-                      <hr>
-                      <p style="border: solid; border-style: dotted; padding: 2%; border-color: black;">Account Details</p>
-                      <hr>
-                      <p style="border: solid; border-style: dotted; padding: 2%; border-color: black;">
-                          {{ request.user.first_name }} {{ request.user.last_name }}<br><br>
-                          {{ request.user.email }}
-                      </p>
-                  </div>
-              </div>
-          </div>
-  
-          <div class="col-lg-4">
-              <div class="card">
-                  <div class="card-body">
-                      <h1>Transactions</h1>
-                      {% if transactions %}
-                          {% for t in transactions %}
-                              <ul>
-                                  <li>
-                                      <p>{{ t.transaction_id }}</p>
-                                      <p>
-                                        <b>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h1>Transactions</h1>
+                        {% if transactions %}
+                        {% for t in transactions %}
+                        <ul>
+                            <li>
+                                <p>{{ t.transaction_id }}</p>
+                                <p>
+                                    <b>
                                         Checkout Wallet Address:
 
                                     </b>
-                                      </p>
-                                        <p>
-                                            {{t.wallet}}
-                                        </p>
-                                        <p>
-                                            {{t.wallet_address}}
-                                        </p>
-                                        <p>
-                                            <b>
-                                            Order details
-                                        </b>
-                                        </p>
-                                        <p>
-                                            Item count: {{t.total_items}}
-                                        </p>
-                                        <p>
-                                            Items in cart:{{t.items}}
-                                        </p>
-                                        <p>
-                                            Total cost: ${{t.cost}}
-                                        </p>
-                                        <p>
-                                            Date: {{t.date}}
-                                        </p>
-                                        {% if t.is_paid == True %}
-                                        <p class=" btn btn-warning">Payment pending</p>
-                                        {% else %}
-                                        <p class="btn btn-danger">
-                                            Not paid
-                                        </p>
-                                        {% endif %}
-                                  </li>
-                                  <hr>
-                              </ul>
-                          {% endfor %}
-                      {% else %}
-                          <p>No Transactions</p>
-                      {% endif %}
-                  </div>
-              </div>
-          </div>
-  
-          <div class="col-lg-4">
-              <div class="card">
-                  <div class="card-body">
-                    <div>
-                      <h2>Wallet Information</h2>
-                      <ul class="list-group mb-3">
-                       
+                                </p>
+                                <p>
+                                    {{t.wallet}}
+                                </p>
+                                <p>
+                                    {{t.wallet_address}}
+                                </p>
+                                <p>
+                                    <b>
+                                        Order details
+                                    </b>
+                                </p>
+                                <p>
+                                    Item count: {{t.total_items}}
+                                </p>
+                                <p>
+                                    Items in cart:{{t.items}}
+                                </p>
+                                <p>
+                                    Total cost: ${{t.cost}}
+                                </p>
+                                <p>
+                                    Date: {{t.date}}
+                                </p>
+                                {% if t.is_processed == True %}
+                                <p class=" btn btn-success">Payment confirmed</p>
 
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>Total Balance(USD)</span>
-                            <strong>${{total}}</strong>
-                        </li>
-                        
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>Available Balance(USD)</span>
-                            <strong>${{request.user.artist.available_balance}}</strong>
-                        </li>
-
-                        
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>Uncleared Balance(USD)</span>
-                            <strong>${{request.user.artist.uncleared_balance}}</strong>
-                        </li>
-                    </ul>
+                                {% elif t.is_paid == True %}
+                                <p class=" btn btn-warning">Payment pending</p>
+                                {% else %}
+                                <a href="{% url 'base:checkout' t.transaction_id %}" class="btn btn-danger">
+                                    Not paid
+                                </a>
+                                {% endif %}
+                            </li>
+                            <hr>
+                        </ul>
+                        {% endfor %}
+                        {% else %}
+                        <p>No Transactions</p>
+                        {% endif %}
+                    </div>
                 </div>
-<br>
-<hr>
-                <div>
-                    <h2>
-                        Swap History
-                    </h2>
-                    <small>These records are public</small>
-                    <ul class="list-group mb-3">
-                       
+            </div>
 
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>Piece name:</span>
-                            <strong></strong>
-                        </li>
-
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>Artist:</span>
-                            <strong></strong>
-                        </li>
-
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>Bought by:</span>
-                            <strong></strong>
-                        </li>
-
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>Date:</span>
-                            <strong></strong>
-                        </li>
-
-                        <li class="list-group-item d-flex justify-content-between">
-                            <span>Transaction ID:</span>
-                            <strong></strong>
-                        </li>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div>
+                            <h2>Wallet Information</h2>
+                            <ul class="list-group mb-3">
 
 
-                    </ul>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Total Balance(USD)</span>
+                                    <strong>${{total}}</strong>
+                                </li>
 
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Available Balance(USD)</span>
+                                    <strong>${{request.user.artist.available_balance}}</strong>
+                                </li>
+
+
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Uncleared Balance(USD)</span>
+                                    <strong>${{request.user.artist.uncleared_balance}}</strong>
+                                </li>
+                            </ul>
+                        </div>
+                        <br>
+                        <hr>
+                        <div>
+                            <h2>
+                                Swap History
+                            </h2>
+                            <small>These records are public</small>
+                            <br>
+                            {% if swaps %}
+                            <h3>You bought</h3>
+                            {% for swap in swaps %}
+                            <ul class="list-group mb-3">
+
+
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Piece name:</span>
+                                    <strong>{{swap.piece}}</strong>
+                                </li>
+
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>From:</span>
+                                    <strong>{{swap.artist}}</strong>
+                                </li>
+
+
+
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>On:</span>
+                                    <strong>{{swap.date}}</strong>
+                                </li>
+
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>At:</span>
+                                    <strong>${{swap.price}}</strong>
+                                </li>
+
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Transaction ID:</span>
+                                    <strong>{{swap.swap_id}}</strong>
+                                </li>
+
+
+                            </ul>
+                            {% endfor %}
+
+                            {% else %}
+                            <h3>
+                                No buy orders to display
+                            </h3>
+                            {% endif %}
+
+
+                            <br>
+                            {% if swaps2 %}
+                            <h3>You sold</h3>
+                            {% for swap in swaps2 %}
+                            <ul class="list-group mb-3">
+
+
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Piece name:</span>
+                                    <strong>{{swap.piece}}</strong>
+                                </li>
+
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>To:</span>
+                                    <strong>{{swap.buyer}}</strong>
+                                </li>
+
+
+
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>On:</span>
+                                    <strong>{{swap.date}}</strong>
+                                </li>
+
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>For:</span>
+                                    <strong>${{swap.price}}</strong>
+                                </li>
+
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Transaction ID:</span>
+                                    <strong>{{swap.swap_id}}</strong>
+                                </li>
+
+
+                            </ul>
+                            {% endfor %}
+
+                            {% else %}
+                            <h3>
+                                No sell orders to display
+                            </h3>
+                            {% endif %}
+
+
+                        </div>
+
+                    </div>
                 </div>
-
-                  </div>
-              </div>
-          </div>
-      </div>
-<br>
-
-      <div>
-        <h2>
-            Catalouge
-        </h2>
-        {% if images %}
-        <div class="row">
-        {% for img in images %}
-        <div class="col-lg-4">
-            <img src="{{img.image.url}}" class="rounded-circle" width="200px" height="200px" alt="">
-            <h2 class="fw-normal">{{img.name}}</h2><small>By {{img.owner.artist.name}} </small>
-            <p> {{img.description|slice:150}}... <a href="{% url 'base:details' img.id %}">View more</a> </p>
-            <p><a class="btn btn-secondary" href="{% url 'base:details' img.id %}">View details »</a></p>
+            </div>
         </div>
-        {% endfor %}
+        <br>
+
+        <div>
+            <h2>
+                Catalouge
+            </h2>
+            {% if images %}
+            <div class="row">
+                {% for img in images %}
+                <div class="col-lg-4">
+                    <img src="{{img.image.url}}" class="rounded-circle" width="200px" height="200px" alt="">
+                    <h2 class="fw-normal">{{img.name}}</h2><small>By {{img.owner.artist.name}} </small>
+                    <p> {{img.description|slice:150}}... <a href="{% url 'base:details' img.image_id %}">View more</a> </p>
+                    <p><a class="btn btn-secondary" href="{% url 'base:details' img.image_id %}">View details »</a></p>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>
+                Catalouge is empty. Enlist your first piece <a href="{% url 'base:show' %}">here.</a>
+            </p>
+            {% endif %}
+        </div>
     </div>
-        {% else %}
-        <p>
-            Catalouge is empty
-        </p>
-        {% endif %}
-      </div>
-  </div>
-  </body>
+</body>
+
 </html>
 
 {% endblock %}

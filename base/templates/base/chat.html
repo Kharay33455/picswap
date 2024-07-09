@@ -25,7 +25,11 @@
         </div>
     </div>
 
+    {% if chat.completed == True %}
+    <div>
+{% else %}
     <div style="margin-bottom: 160px;">
+        {% endif %}
         <!--Messages-->
         {% for msg in messages %}
 
@@ -71,6 +75,15 @@
     </div>
     <div style="position: relative;">
         <div style="position: fixed; bottom: 0; width: 100%; background-color: white;">
+            {% if chat.completed == True %}
+            <div style="color: green; font-size: x-large; font-weight: 900; text-align: center;">
+                {% if request.user == chat.buyer.user %}
+                You bought "{{chat.piece.name}}" from {{chat.artist.name}} at ${{chat.offer}}
+                {% else %}
+                You sold "{{chat.piece.name}}" to {{chat.buyer.name}} for ${{chat.offer}}
+                {% endif %}
+            </div>
+            {% else %}
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
 
@@ -97,6 +110,11 @@
                     {% csrf_token %}
                     <input type="number" name="offer" required>
                     <button type="submit" class="btn btn-bd-primary">Make offer</button>
+                 {% if chat.err %}
+                 <div style="color: red;">
+                    {{chat.err}}
+                 </div>
+                 {% endif %}
                 </form>
 
             </div>
@@ -104,17 +122,21 @@
             {% else %}
             {% if chat.offer %}
             <span>
-                <b>{{chat.buyer}}</b> bid for <b>${{chat.offer}}.</b> <a href="{% url 'base:swap' chat.chat_id %}" class="btn btn-success">Accept</a> <button
-                    class="btn btn-danger">Reject</button>
+                <b>{{chat.buyer}}</b> bid for <b>${{chat.offer}}.</b> <a href="{% url 'base:swap' chat.chat_id %}"
+                    class="btn btn-success">Accept</a> <a href="{% url 'base:offer' chat.id %}" class="btn btn-danger">Reject</a>
             </span>
             {% else %}
             <div><b>
                     {{chat.buyer}} hasn't made an offer.
                 </b>
+                {% if chat.artist_err %}
+                <p style="color: red;">{{chat.artist_err}}</p>
+                {% endif %}
             </div>
             {% endif %}
             {% endif %}
             <br>
+            {% endif %}
         </div>
     </div>
 

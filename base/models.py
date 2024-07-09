@@ -16,11 +16,13 @@ class Artist(models.Model):
     pfp = models.ImageField(blank=True, null=True, upload_to='images')
     available_balance = models.IntegerField(default=0)
     uncleared_balance = models.IntegerField(default=0)
+    swaps_completed = models.IntegerField(default = 0)
 
     def __str__(self):
         return f'{self.name}'
 
 class Images(models.Model):
+    image_id = models.CharField(max_length=20)
     name = models.CharField(max_length = 30)
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.TextField()
@@ -105,6 +107,9 @@ class Chat(models.Model):
     read_by_buyer = models.BooleanField()
     date_of_creation = models.DateTimeField(auto_now_add=True)
     offer = models.IntegerField(blank=True, null=True)
+    completed = models.BooleanField(default=False)
+    err = models.CharField(max_length=50, blank = True, null=True)
+    artist_err = models.CharField(max_length=50, blank=True, null=True)
 
     
 
@@ -185,4 +190,4 @@ class Swap(models.Model):
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        f'{self.artist} sold {self.piece} to {self.buyer} at {self.price} on {self.date}'
+        return f'{self.artist} sold {self.piece} to {self.buyer} at {self.price} on {self.date}'

@@ -14,6 +14,9 @@
 .bi-trash-fill{
     color: red;
 }
+.list-group-item{
+    padding-bottom: 30px;
+}
 
 .b-example-divider {
     width: 100%;

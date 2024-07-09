@@ -1,6 +1,36 @@
 {% extends 'base/base.html' %}
 {% load static %}
 {% block content %}
+<div style="position: absolute; width: 100%; bottom: 0; display: none;" id="photo">
+    <div class="modal modal-sheet position-static d-block bg-secondary py-5" tabindex="-1" role="dialog"
+        id="modalSheet">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content rounded-6 shadow">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title">Delete {{piece.name}}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                        onclick="var photo = document.getElementById('photo'); photo.style.display = (photo.style.display === 'block') ? 'none' : 'block';"></button>
+                </div>
+                <div class="modal-body py-0">
+                    <p>
+                        Are you sure you want to delete {{piece.name}}? This action cannot be undone.
+
+                    </p>
+                </div>
+                <div class="modal-footer flex-column border-top-0">
+                    <a href="{% url 'base:delete-piece' piece.id %}" type="button"
+                        class="btn btn-lg btn-danger w-100 mx-0 mb-2">Delete {{piece.name}} </a>
+                    <button type="button" class="btn btn-lg btn-light w-100 mx-0" data-bs-dismiss="modal"
+                        onclick="var photo = document.getElementById('photo'); photo.style.display = (photo.style.display === 'block') ? 'none' : 'block';">Go
+                        back</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 <h1>
     {{piece.name}} by {{piece.owner.artist.name}}
 </h1>
@@ -14,18 +44,28 @@
 </div>
 
 {% if piece.owner == request.user %}
-<span> 
-    <a class="btn btn-danger" href="{% url 'base:delete-piece' piece.id %}">Delete {{piece.name}}?</a> 
+<span>
+    <button class="btn btn-danger"
+        onclick="var photo = document.getElementById('photo'); photo.style.display = (photo.style.display === 'none') ? 'block' : 'none';">Delete
+        {{piece.name}}?</button>
+
     {% if piece.is_copyright == True %}
-    <a class="btn btn-bd-primary" href="{% url 'base:copyright' %}">{{piece.name}} is copyrighted</a> 
-{% else %}
-    <a class="btn btn-bd-primary" href="{% url 'base:copyright' %}">Copyright {{piece.name}}?</a> 
+    <a class="btn btn-bd-primary" href="{% url 'base:copyright' %}">{{piece.name}} is copyrighted</a>
+    <p><b>Share this code with other Swap members who are looking to find your piece: {{piece.image_id}}
+        </b>
+
+    </p>
+    {% elif piece.copyright.is_paid == True %}
+    <a class="btn btn-warning" href="{% url 'base:copyright' %}">All licenses for {{piece.name}} are currently being established.</a>
+
+    {% else %}
+    <a class="btn btn-bd-primary" href="{% url 'base:copyright' %}">Copyright {{piece.name}}?</a>
     {% endif %}
 
 </span>
 {% else %}
-<p> 
-    <a class="btn btn-primary" href="{% url 'base:acquire' piece.id %}">Place an offer for this piece</a> 
+<p>
+    <a class="btn btn-primary" href="{% url 'base:acquire' piece.id %}">Place an offer for this piece</a>
 </p>
 {% endif %}
 {% endblock %}

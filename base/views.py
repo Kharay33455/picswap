@@ -28,9 +28,15 @@ def pricing(request):
     return render(request, 'base/pricing.html', context)
 
 def details(request, id):
-    piece = Images.objects.get(id = id)
-    context ={'piece':piece}
-    return render(request, 'base/featured_details.html', context)
+    try:
+        piece = Images.objects.get(image_id = id)
+        context ={'piece':piece}
+        return render(request, 'base/featured_details.html', context)
+    except(KeyError, Images.DoesNotExist):
+        featured = Images.objects.filter(is_featured = True).order_by('?')
+        context = {'featured':featured, 'err':'We couldn\'t find this art piece on any of our servers. Please double-check that you\'ve entered the correct ID.'}
+        return render (request, 'base/featured.html', context)
+
 
 def login_request(request):
     company_name = Company_name.objects.first()
@@ -111,7 +117,9 @@ def profile(request):
         total = request.user.artist.available_balance + request.user.artist.uncleared_balance 
         transactions = Transaction.objects.filter(user = request.user)
         images =Images.objects.filter(owner = request.user).order_by('?')
-        context = {'company_name':company_name, 'images':images, 'transactions':transactions, 'total':total}
+        swaps = Swap.objects.filter(buyer = request.user.buyer.name)
+        swaps2 = Swap.objects.filter(artist = request.user.artist.name)
+        context = {'company_name':company_name, 'images':images, 'transactions':transactions, 'total':total, 'swaps':swaps, 'swaps2':swaps2}
         
         return render(request, 'base/profile.html', context)
     else:
@@ -122,7 +130,8 @@ def show(request):
             name = request.POST['name']
             description = request.POST['des']
             image = request.FILES['image']
-            Images.objects.create(name = name, description = description, image=image, owner = request.user, is_featured = False )
+            img_id = random.randint(1111111111,9999999999999999)
+            Images.objects.create(name = name, description = description, image=image, owner = request.user, is_featured = False, image_id =img_id )
             return HttpResponseRedirect(reverse('base:profile'))
         context = {'company_name':company_name}
         return render(request, 'base/add.html', context)
@@ -223,6 +232,8 @@ def acquire(request, id):
             artist = Artist.objects.get(user = piece.owner)
             chat = Chat.objects.create(chat_id = chat_id, subject=subject, buyer=buyer, artist=artist, piece=piece, read_by_artist = False, read_by_buyer = True)
             Message.objects.create(chat = chat, from_artist =False, body = 'Hi, is this still available?', image = piece.image)
+            chat.artist.has_new_message = True
+            chat.artist.save()
             return HttpResponseRedirect(reverse('base:chat', args=[chat.chat_id]))
 
         
@@ -421,13 +432,39 @@ def delete_art_piece(request, id):
     
 def offer(request, id):
     if request.user.is_authenticated:
-        request.method = 'POST'
-        offer = request.POST['offer']
         chat = Chat.objects.get(id = id)
-        chat.offer = offer
-        chat.save()
-        return HttpResponseRedirect(reverse('base:chat', args=[chat.chat_id]))
-    
+
+        if request.method == 'POST':
+        
+            offer = request.POST['offer']
+            
+            if int(offer) < chat.buyer.user.artist.available_balance :
+                chat.buyer.user.artist.available_balance -= int(offer)
+                chat.buyer.user.artist.save()
+                chat.artist.has_new_message = True
+                chat.artist.save()
+
+                chat.offer = offer
+                chat.save()
+                return HttpResponseRedirect(reverse('base:chat', args=[chat.chat_id]))
+            else:
+                chat.err = 'You do not have enough balance to complete this transaction'
+                chat.save()
+                return HttpResponseRedirect(reverse('base:chat', args=[chat.chat_id]))
+        else:
+            
+            chat.buyer.user.artist.available_balance += int(chat.offer)
+            chat.buyer.user.artist.save()
+            chat.buyer.has_new_message = True
+            chat.buyer.save()
+            
+            chat.err = f'{chat.artist} rejected your offer of ${chat.offer}'
+            chat.artist_err = f'You rejected {chat.buyer}\'s offer of ${chat.offer}'
+            chat.offer = None
+            chat.save()
+            return HttpResponseRedirect(reverse('base:chat', args=[chat.chat_id]))
+
+            
 
 
     else:
@@ -437,12 +474,45 @@ def swap(request, chat_id):
     if request.user.is_authenticated:
         chat = Chat.objects.get(chat_id = chat_id)
         chat.artist.uncleared_balance+=chat.offer
+        chat.artist.swaps_completed +=1
         chat.artist.save()
+        chat.buyer.user.artist.swaps_completed+=1
+        chat.buyer.user.artist.save()
         chat.piece.owner = chat.buyer.user
         chat.piece.save()
         Swap.objects.create(swap_id = chat_id, buyer = chat.buyer.name, artist = chat.artist.name, piece = chat.piece.name, piece_description = chat.piece.description, price = chat.offer)
-        return HttpResponseRedirect(reverse('base:profile'))
+        chat.completed = True
+        chat.save()
+        return HttpResponseRedirect(reverse('base:chat', args=[chat.chat_id]))
     
     
     else:
         return HttpResponseRedirect(reverse('base:login'))
+    
+
+def upgrade(request, package):
+    if request.user.is_authenticated:
+        cart, created = Cart.objects.get_or_create(owner = request.user)
+        if package == 'established':
+            CartItem.objects.create(product_name = 'Established Artist upgrade', product_description = 'Buy and get access to more features', product_value = 15, cart = cart)
+            return HttpResponseRedirect(reverse('base:pay'))
+        else:
+            CartItem.objects.create(product_name = 'Renowned Artist upgrade', product_description = 'Unlock unlimited possibilities to potential clients', product_value = 29, cart=cart)
+            return HttpResponseRedirect(reverse('base:pay'))
+
+    else:
+        return HttpResponseRedirect(reverse('base:login'))
+    
+
+def search(request):
+    if request.user.is_authenticated:
+        if request.method =='POST':
+                
+                image_id = request.POST['image_id'].strip()
+                image_id = "".join(image_id.split())
+                return HttpResponseRedirect(reverse('base:details', args=[image_id]))
+    else:
+        return HttpResponseRedirect(reverse('base:login'))
+    
+    
+

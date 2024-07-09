@@ -1,6 +1,16 @@
 {% extends 'base/base.html' %}
 {% block content %}
-
+<form class="d-flex" role="search" action="{% url 'base:search' %}" method="post">
+    {% csrf_token %}
+    <input name="image_id" required class="form-control me-2" type="search" placeholder="Search by ID" aria-label="Search">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+  </form>
+  {% if err %}
+  <p style="color: red;"> <b>
+  {{err}}
+</b>
+</p>
+  {% endif %}
 <!-- Three columns of text below the carousel -->
 <div style="padding-left: 10px;">
     <div class="row">
@@ -8,8 +18,8 @@
         <div class="col-lg-4">
             <img src="{{img.image.url}}" class="rounded-circle" width="200px" height="200px" alt="">
             <h2 class="fw-normal">{{img.name}}</h2><small>By {{img.owner.artist.name}} </small>
-            <p> {{img.description|slice:150}}... <a href="{% url 'base:details' img.id %}">View more</a> </p>
-            <p><a class="btn btn-secondary" href="{% url 'base:details' img.id %}">View details »</a></p>
+            <p> {{img.description|slice:150}}... <a href="{% url 'base:details' img.image_id %}">View more</a> </p>
+            <p><a class="btn btn-secondary" href="{% url 'base:details' img.image_id %}">View details »</a></p>
         </div><!-- /.col-lg-4 -->
         {% endfor %}
     </div><!-- /.row -->
