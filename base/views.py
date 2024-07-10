@@ -11,30 +11,30 @@ company_name = Company_name.objects.first()
 
 
 def base(request):
-    context = {}
+    context = {'company_name':company_name}
     return render (request, 'base/index.html', context)
 
 def featured(request):
     featured = Images.objects.filter(is_featured = True).order_by('?')
-    context = {'featured':featured}
+    context = {'featured':featured, 'company_name':company_name}
     return render (request, 'base/featured.html', context)
 
 def about(request):
-    context = {}
+    context = {'company_name':company_name}
     return render(request, 'base/about.html', context)
 
 def pricing(request):
-    context = {}
+    context = {'company_name':company_name}
     return render(request, 'base/pricing.html', context)
 
 def details(request, id):
     try:
         piece = Images.objects.get(image_id = id)
-        context ={'piece':piece}
+        context ={'piece':piece, 'company_name':company_name}
         return render(request, 'base/featured_details.html', context)
     except(KeyError, Images.DoesNotExist):
         featured = Images.objects.filter(is_featured = True).order_by('?')
-        context = {'featured':featured, 'err':'We couldn\'t find this art piece on any of our servers. Please double-check that you\'ve entered the correct ID.'}
+        context = {'company_name':company_name, 'featured':featured, 'err':'We couldn\'t find this art piece on any of our servers. Please double-check that you\'ve entered the correct ID.'}
         return render (request, 'base/featured.html', context)
 
 
@@ -307,7 +307,7 @@ def chat(request, chat_id):
 
 
             messages = Message.objects.filter(chat = chat)
-            context = {'chat':chat, 'buyer':buyer, 'artist':artist, 'messages':messages}
+            context = {'chat':chat, 'buyer':buyer, 'artist':artist, 'messages':messages, 'company_name':company_name}
             return render(request, 'base/chat.html', context)
     else:
         return HttpResponseRedirect(reverse('base:login'))
@@ -323,7 +323,7 @@ def chats(request):
 
         sell_chats = Chat.objects.filter(artist = request.user.artist)
         buy_chats = Chat.objects.filter(buyer = request.user.buyer)
-        context = {'sell_chats':sell_chats, 'buy_chats': buy_chats}
+        context = {'sell_chats':sell_chats, 'buy_chats': buy_chats, 'company_name':company_name}
         return render(request, 'base/chats.html', context)
     else:
         return HttpResponseRedirect(reverse('base:login'))

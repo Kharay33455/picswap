@@ -51,7 +51,7 @@
 
     {% if piece.is_copyright == True %}
     <a class="btn btn-bd-primary" href="{% url 'base:copyright' %}">{{piece.name}} is copyrighted</a>
-    <p><b>Share this code with other Swap members who are looking to find your piece: {{piece.image_id}}
+    <p><b>Share this code with other {{company_name.name|lower}} members who are looking to find your piece: {{piece.image_id}}
         </b>
 
     </p>

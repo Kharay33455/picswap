@@ -14,7 +14,8 @@
             <div class="container">
                 <div class="carousel-caption text-start">
                     <h1>Sell photos safely</h1>
-                    <p class="opacity-75">Monetize your creativity by selling your photos on Art Swap, ensuring secure
+                    <p class="opacity-75">Monetize your creativity by selling your photos on
+                        {{company_name.name|capfirst}}, ensuring secure
                         transactions with full escrow protection.</p>
                     {% if request.user.is_authenticated %}
                     <p><a class="btn btn-lg btn-primary" href="{% url 'base:show' %}">Show and tell</a></p>
@@ -59,7 +60,7 @@
     <br>
 
     <div>
-        <h2>Quick guide to using Art Swap to buy and sell photos.</h2>
+        <h2>Quick guide to using {{company_name.name}} to buy and sell photos.</h2>
         <p>
             Firstly, let's make it clear that we exclusively handle images licensed by us. Images copyrighted by other
             entities cannot be traded on this platform.
@@ -74,7 +75,7 @@
             copies of it.
         </p>
         <h3>
-            Buying images on Art Swap
+            Buying images on {{company_name.name}}
         </h3>
         <p>
             When purchasing an image copyrighted by us, our escrow service ensures a smooth transaction between buyer
@@ -83,10 +84,12 @@
             order, the funds are released to the seller and the image is transferred to the buyer. A licensing fee,
             based on a percentage of the transaction amount, is required to receive your license.</p>
         <h4>
-            Selling images on Art Swap
+            Selling images on {{company_name.name}}
+            </h3>
         </h4>
         <p>
-            Selling an image on Art Swap is straightforward. Begin by uploading the original copy of your image in any
+            Selling an image on {{company_name.name}}
+            </h3> is straightforward. Begin by uploading the original copy of your image in any
             format. Next, ensure the image is copyrighted in your catalog, which incurs a one-time fee of $50. We verify
             its originality and absence of copyright infringement with other agencies. Note that you are responsible for
             uploading only your own content. Once completed, you can list the image for sale. A unique token code

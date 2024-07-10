@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.122.0">
-    <title>Art Swap</title>
+    <title>{{company_name.name|upper}}</title>
 
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/carousel/">
@@ -108,7 +108,7 @@
         <nav class="navbar navbar-expand-lg my_nav">
             <div class="container-fluid">
               <a class="navbar-brand" href="{% url 'base:home' %}">
-                <span style="font-size: xx-large; font-weight: 900;">ART SWAP</span>
+                <span style="font-size: xx-large; font-weight: 900;">{{company_name.name|upper}}</span>
                 <img src="{% static 'images/download.jpg' %}" width="60" height="60" alt="">
               </a>
               <div data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
