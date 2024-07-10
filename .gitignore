@@ -1,3 +1,4 @@
 db.sqlite3
 *.pyc
 picswap/settings.py
+./picswap/settings.py
