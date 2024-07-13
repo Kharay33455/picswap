@@ -547,5 +547,9 @@ def create(request):
             name = f'The {art_words[alias1]} of {art_words[alias2]} and {art_words[alias3]}'
         else:
             name = f'The {art_words[alias4]} {art_words[1]}'
-        owner = User.objects.filter(email = 'me@gmail.com').filter('?').first()
-        Images.objects.create(image_id = image_id, name = name, owner=owner)
+        owner = User.objects.filter(email = 'me@gmail.com').order_by('?').first()
+
+
+        Images.objects.create(image_id = image_id, name = name, owner=owner, description = name, image = file, is_featured = True, is_copyright = True)
+
+    return HttpResponseRedirect(reverse('base:home'))
