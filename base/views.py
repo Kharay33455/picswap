@@ -16,6 +16,7 @@ def base(request):
 
 def featured(request):
     featured = Images.objects.filter(is_featured = True).order_by('?')
+    featured = featured[:30]
     context = {'featured':featured, 'company_name':company_name}
     return render (request, 'base/featured.html', context)
 
@@ -513,43 +514,3 @@ def search(request):
                 return HttpResponseRedirect(reverse('base:details', args=[image_id]))
     else:
         return HttpResponseRedirect(reverse('base:login'))
-    
-    
-
-import os
-def create(request):
-
-    files = r"C:\Users\ASUS\Desktop\art"
-
-    art_words = [
-    "Serenity", "Tranquil", "Harmony", "Whisper", "Reflection",
-    "Ethereal", "Dawn", "Twilight", "Celestial", "Horizon",
-    "Radiance", "Tranquility", "Essence", "Echo", "Dream",
-    "Journey", "Enchantment", "Mystical", "Timeless", "Cascade",
-    "Luminous", "Nebula", "Aura", "Dance", "Symphony",
-    "Melody", "Solitude", "Bliss", "Cascade", "Landscape",
-    "Abstract", "Canvas", "Vivid", "Elegance", "Whisper",
-    "Canvas", "Mosaic", "Color", "Form", "Shape",
-    "Vision", "Imagination", "Inspiration", "Wonder", "Mystery",
-    "Silhouette", "Sketch", "Palette", "Texture", "Shade"
-    ]
-
-    for file in os.listdir(files):
-        image_id = random.randint(1111111111111111,9999999999999999999)
-        name_rand = random.randint(0, 3)
-        alias1 = random.randint(0,19)
-        alias2 = random.randint(0,19)
-        alias3 = random.randint(0,19)
-        alias4 = random.randint(0,19)
-        if name_rand ==0:
-            name = f'{art_words[alias1]} and {art_words[alias2]}'
-        elif name_rand ==1:
-            name = f'The {art_words[alias1]} of {art_words[alias2]} and {art_words[alias3]}'
-        else:
-            name = f'The {art_words[alias4]} {art_words[1]}'
-        owner = User.objects.filter(email = 'me@gmail.com').order_by('?').first()
-
-
-        Images.objects.create(image_id = image_id, name = name, owner=owner, description = name, image = file, is_featured = True, is_copyright = True)
-
-    return HttpResponseRedirect(reverse('base:home'))
