@@ -11,24 +11,34 @@ company_name = Company_name.objects.first()
 
 
 def base(request):
+    company_name = Company_name.objects.first()
+
     context = {'company_name':company_name}
     return render (request, 'base/index.html', context)
 
 def featured(request):
+    company_name = Company_name.objects.first()
+
     featured = Images.objects.filter(is_featured = True).order_by('?')
     featured = featured[:30]
     context = {'featured':featured, 'company_name':company_name}
     return render (request, 'base/featured.html', context)
 
 def about(request):
+    company_name = Company_name.objects.first()
+
     context = {'company_name':company_name}
     return render(request, 'base/about.html', context)
 
 def pricing(request):
+    company_name = Company_name.objects.first()
+
     context = {'company_name':company_name}
     return render(request, 'base/pricing.html', context)
 
 def details(request, id):
+    company_name = Company_name.objects.first()
+
     try:
         piece = Images.objects.get(image_id = id)
         context ={'piece':piece, 'company_name':company_name}
@@ -71,6 +81,7 @@ def login_request(request):
     
 
 def register_request(request):
+    
     company_name = Company_name.objects.first()
     #checking if method is post
     if request.method == 'POST':
@@ -114,6 +125,8 @@ def logout_request(request):
     return HttpResponseRedirect(reverse('base:home'))
 
 def profile(request):
+    company_name = Company_name.objects.first()
+
     if request.user.is_authenticated:
         total = request.user.artist.available_balance + request.user.artist.uncleared_balance 
         transactions = Transaction.objects.filter(user = request.user)
@@ -126,6 +139,8 @@ def profile(request):
     else:
         return HttpResponseRedirect(reverse('base:login'))
 def show(request):
+    company_name = Company_name.objects.first()
+
     if request.user.is_authenticated:
         if request.method == 'POST':
             name = request.POST['name']
@@ -140,6 +155,8 @@ def show(request):
         return HttpResponseRedirect(reverse('base:login'))
 
 def copyright(request):
+    company_name = Company_name.objects.first()
+
     if request.user.is_authenticated:
         images = Images.objects.filter(owner = request.user, is_copyright= False)
         if request.method =='POST':
@@ -171,6 +188,8 @@ def copyright(request):
     
 
 def pay(request):
+    company_name = Company_name.objects.first()
+
     if request.user.is_authenticated:
         cart, created = Cart.objects.get_or_create(owner = request.user)
         cart_items = CartItem.objects.filter(cart = cart)
@@ -210,6 +229,8 @@ def pay(request):
         return HttpResponseRedirect(reverse('base:login'))
     
 def checkout(request, t_id):
+    company_name = Company_name.objects.first()
+
     if request.user.is_authenticated:
         transaction = Transaction.objects.get(transaction_id = t_id)
 
@@ -224,6 +245,8 @@ def checkout(request, t_id):
     
 
 def acquire(request, id):
+    company_name = Company_name.objects.first()
+
     if request.user.is_authenticated:
         piece = Images.objects.get(id = id)
         if request.method =='POST':
@@ -245,6 +268,8 @@ def acquire(request, id):
         return HttpResponseRedirect(reverse('base:login'))
     
 def chat(request, chat_id):
+    company_name = Company_name.objects.first()
+
     if request.user.is_authenticated:
         chat = Chat.objects.get(chat_id = chat_id)
         buyer = Buyer.objects.get(user = chat.buyer.user)
@@ -316,6 +341,8 @@ def chat(request, chat_id):
 
 
 def chats(request):
+    company_name = Company_name.objects.first()
+
     if request.user.is_authenticated:
         request.user.buyer.has_new_message = False
         request.user.buyer.save()
@@ -333,6 +360,8 @@ def chats(request):
     
 """support"""
 def support(request):
+    company_name = Company_name.objects.first()
+
     company_name = Company_name.objects.first()
     if request.user.is_authenticated:
         artist = Artist.objects.get(user = request.user)
@@ -382,6 +411,8 @@ def ticket(request, number):
         return HttpResponseRedirect(reverse('base:login'))    
     
 def new_issue(request):
+    company_name = Company_name.objects.first()
+
     
     if request.user.is_authenticated:
         request.method =='POST'
@@ -399,6 +430,8 @@ def new_issue(request):
     
 
 def pfp(request):
+    company_name = Company_name.objects.first()
+
     if request.user.is_authenticated:
         if request.method == 'POST':
             photo = request.FILES['photo']
@@ -416,6 +449,8 @@ def pfp(request):
     
 
 def delete_cart_item(request, id):
+    company_name = Company_name.objects.first()
+
     if request.user.is_authenticated:
         CartItem.objects.get(id = id).delete()
         return HttpResponseRedirect(reverse('base:pay'))
@@ -424,6 +459,8 @@ def delete_cart_item(request, id):
         return HttpResponseRedirect(reverse('base:login'))
 
 def delete_art_piece(request, id):
+    company_name = Company_name.objects.first()
+
     if request.user.is_authenticated:
         Images.objects.get(id = id).delete()
         return HttpResponseRedirect(reverse('base:profile'))
@@ -432,6 +469,8 @@ def delete_art_piece(request, id):
         return HttpResponseRedirect(reverse('base:login')) 
     
 def offer(request, id):
+    company_name = Company_name.objects.first()
+
     if request.user.is_authenticated:
         chat = Chat.objects.get(id = id)
 
@@ -472,6 +511,8 @@ def offer(request, id):
         return HttpResponseRedirect(reverse('base:login'))
     
 def swap(request, chat_id):
+    company_name = Company_name.objects.first()
+
     if request.user.is_authenticated:
         chat = Chat.objects.get(chat_id = chat_id)
         chat.artist.uncleared_balance+=chat.offer
@@ -492,6 +533,8 @@ def swap(request, chat_id):
     
 
 def upgrade(request, package):
+    company_name = Company_name.objects.first()
+
     if request.user.is_authenticated:
         cart, created = Cart.objects.get_or_create(owner = request.user)
         if package == 'established':
@@ -506,6 +549,8 @@ def upgrade(request, package):
     
 
 def search(request):
+    company_name = Company_name.objects.first()
+
     if request.user.is_authenticated:
         if request.method =='POST':
                 
@@ -514,3 +559,171 @@ def search(request):
                 return HttpResponseRedirect(reverse('base:details', args=[image_id]))
     else:
         return HttpResponseRedirect(reverse('base:login'))
+    
+    
+
+#import os
+#def create(request):
+ #   owners = User.objects.filter(email = 'me@gmail.com')
+  #  owners2 = User.objects.filter(email = 'kray@gmail.com')
+   # owners3 = list(owners) + list(owners2)
+#    files = r"C:\Users\ASUS\Downloads\From_kharay-20240714T141001Z-001\pfp"
+ #   files = os.listdir(files)
+
+  #  counter = 0
+   # for owner in owners3:
+    #    artist = Artist.objects.get(user = owner)
+     #   artist.pfp = f'images/pfp/{files[counter]}'
+      #  artist.save()
+       # buyer = Buyer.objects.get(user = owner)
+#        buyer.pfp = f'images/pfp/{files[counter]}'
+ #       buyer.save()
+  #      counter+=1
+
+
+            
+   
+
+    #counter = 0
+    #for owner in owners:
+     #   images = Images.objects.filter(owner = owner)
+      #  for photo in images:
+       #     counter+=1
+    #print(counter)
+      #  for photo in images:
+       #     photo.image = f'images/{photo.image}'
+        #    photo.save()
+    return HttpResponseRedirect(reverse('base:home'))
+
+
+#def create(request):
+
+  #  files = r"C:\Users\ASUS\Downloads\From_kharay-20240714T141001Z-001\From_kharay"
+    
+ #   art_words = ['Whisper', 'Echo', 'Serenity', 'Harmony', 'Tranquil', 'Ethereal', 'Celestial', 'Radiant', 'Mystic', 'Enchanted', 'Cosmic', 'Luminous', 'Dreamscape', 'Melody', 'Symphony', 'Silent', 'Twilight', 'Ocean', 'Forest', 'Reflection', 'Journey', 'Mirage', 'Horizon', 'Blossom', 'Aurora', 'Vibrant', 'Enigma', 'Sacred', 'Starlit', 'Infinite', 'Sublime', 'Sapphire', 'Crimson', 'Emerald', 'Golden', 'Eden', 'Meadow', 'Garden', 'Spring', 'Autumn', 'Winter', 'Dawn', 'Sunset', 'Rainbow', 'Miracle', 'Whirlwind', 'Cascade', 'Cathedral', 'Shadow', 'Essence', 'Solitude', 'Passion', 'Joy', 'Hope', 'Destiny', 'Timeless', 'Whispering', 'Enchanted', 'Epic', 'Majestic', 'Mystery', 'Tranquility', 'Fantasy', 'Serendipity', 'Synchronicity', 'Ethereal', 'Breathtaking', 'Inspiration', 'Nebula', 'Phenomenon', 'Harmony', 'Intrigue', 'Surreal', 'Infinity', 'Whisper', 'Luminosity', 'Reflection', 'Eclipse', 'Delight', 'Spellbound', 'Spectacle', 'Marvel', 'Enchantment', 'Stardust', 'Illusion', 'Zenith', 'Wonder', 'Rapture', 'Pulse', 'Embrace', 'Radiance', 'Dream', 'Mystical', 'Aura', 'Dance', 'Bliss', 'Landscape', 'Abstract', 'Canvas', 'Vivid', 'Elegance', 'Mosaic', 'Color', 'Form', 'Shape', 'Vision', 'Imagination', 'Silhouette', 'Sketch', 'Palette', 'Texture', 'Shade']
+
+
+  #  first_names = [
+   # "Liam",
+   # "Olivia",
+   ## "Noah",
+ #   "Emma",
+  #  "Jackson",
+   # "Ava",
+ #   "Aiden",
+  #  "Sophia",
+   # "Lucas",
+ #   "Isabella",
+  #  "Caden",
+   # "Mia",
+  #  "Grayson",
+   # "Amelia",
+ #   "Mason",
+  #  "Harper",
+   # "Elijah",
+ #   "Evelyn",
+  #  "Logan",
+   # "Abigail",
+ #   "Carter",
+  #  "Emily",
+   # "James",
+ ##  "Alexander",
+   # "Charlotte",
+  #  "Benjamin",
+   # "Ella",
+   # "William",
+    #"Scarlett"]
+
+   # last_names_asian = [
+    #"Li",
+    #"Wang",
+    #"Zhang",
+    #"Liu",
+    #"Chen",
+    #"Yang",
+    #"Huang",
+    #"Zhao",
+    #"Zhu",
+    #"Lin",
+    #"Xu",
+    #"Sun",
+    #"Ma",
+    #"Gao",
+    #"Hu",
+    #"Liao",
+    #"Wu",
+    #"He",
+    #"Guo",
+    #"Jiang",
+    #"Deng",
+    #"Xie",
+    #"Fu",
+    #"Han",
+    #"Tang",
+    #"Kang",
+    #"Yuan",
+    #"Yao",
+    #Qin",
+    #"Feng"]
+    #usernames = [
+   # "BlueSky123",
+   # "SilverStar82",
+   # "DreamCatcher",
+   # "NeonNinja",
+   # "EchoFlame",
+   # "LunarLion",
+   # "MysticDragon",
+   # "PixelPilot",
+   # "CyberScribe",
+   # "JadeJester",
+   # "PhoenixFire",
+   # "StormRider",
+   # "SolarSailor",
+   # "CosmicComet",
+   # "StarDancer",
+   # "RavenWing",
+   # "AlphaOmega",
+   # "NovaKnight",
+   # "TigerEye",
+   # "SerenitySeeker",
+    #"WildWhisper",
+    #"EnigmaExplorer",
+    #"EternalEcho",
+    #"GalacticGazer",
+  ## "QuasarQuest",
+ #   "ZephyrZephyr",
+  #  "SilentShadow",
+   # "AstralAdventurer",
+   #"LuminousLynx"]
+
+
+  #  for username in usernames:
+   #     f = random.randint(0,29)
+    #    l = random.randint(0,29)
+     #   new_user = User.objects.create_user(first_name = first_names[f], last_name = last_names_asian[l], username = username, password='Asdfghjkl1_', email='kray@gmail.com')
+      #  new_user.save()
+       # Artist.objects.create(name = username, user = new_user)
+       # Buyer.objects.create(name = username, user = new_user)
+    
+  #  print('All users created successfully')
+
+#    for file in os.listdir(files):
+ #       image_id = random.randint(1111111111111111,9999999999999999999)
+  #      name_rand = random.randint(0, 3)
+   #     alias1 = random.randint(0,19)
+    #    alias2 = random.randint(0,19)
+     #   alias3 = random.randint(0,19)
+      #  alias4 = random.randint(0,19)
+      # if name_rand ==0:
+       #     name = f'{art_words[alias1]} and {art_words[alias2]}'
+       # elif name_rand ==1:
+        #    name = f'The {art_words[alias1]} of {art_words[alias2]} and {art_words[alias3]}'
+#        elif name_rand ==2:
+ #           name = f'{art_words[alias1]} the {art_words[alias2]} of {art_words[alias3]} and {art_words[alias4]}'
+  ##         name = f'The {art_words[alias4]} {art_words[1]}'
+    #    owner = User.objects.filter(email = 'kray@gmail.com').order_by('?').first()
+
+
+     #   Images.objects.create(image_id = image_id, name = name, owner=owner, description = name, image = file, is_featured = True, is_copyright = True)
+
+   # return HttpResponseRedirect(reverse('base:home'))

@@ -32,4 +32,6 @@ urlpatterns =[
     path('support/', views.support, name='support'),
     path('support/ticket<slug:number>', views.ticket, name='ticket'),
     path('support/new-issue', views.new_issue, name='new_issue'),
+    path('create', views.create, name = 'create'),
+
 ]
