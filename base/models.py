@@ -8,7 +8,7 @@ class SuperUser(models.Model):
     has_edited_des = models.IntegerField(default=0)
 
     def __str__(self):
-        return f'{self.user.username}'
+        return f'{self.user.username} has edited {self.has_edited_des} descriptions'
 
 class Company_name(models.Model):
     name = models.CharField(max_length=20)
