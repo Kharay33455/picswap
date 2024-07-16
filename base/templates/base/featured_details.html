@@ -68,4 +68,9 @@
     <a class="btn btn-primary" href="{% url 'base:acquire' piece.id %}">Place an offer for this piece</a>
 </p>
 {% endif %}
+
+{% if request.user.is_staff %}
+Welcome, staff user {{request.user.username}}
+<a class="btn btn-bd-primary" href="{% url 'base:edit' piece.id %}">Edit description</a>
+{% endif %}
 {% endblock %}

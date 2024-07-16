@@ -15,7 +15,7 @@ def base(request):
     steps = Step.objects.all()
 
     context = {'company_name':company_name, 'steps':steps}
-    
+
     return render (request, 'base/index.html', context)
 
 def featured(request):
@@ -722,3 +722,25 @@ def create(request):
      #   Images.objects.create(image_id = image_id, name = name, owner=owner, description = name, image = file, is_featured = True, is_copyright = True)
 
    # return HttpResponseRedirect(reverse('base:home'))
+
+
+
+
+def edit(request, id):
+    piece = Images.objects.get(id = id)
+    if request.user.is_staff:
+        if request.method == 'POST':
+            new_description = request.POST['des']
+            piece.description = new_description
+            piece.save()
+            edited = SuperUser.objects.get(user = request.user)
+            edited.has_edited_des +=1
+            edited.save()
+            return HttpResponseRedirect(reverse('base:details', args=[piece.image_id]))
+
+        else:
+            
+            context = {'piece':piece}
+            return render(request, 'base/edit.html', context)
+    else:
+        return HttpResponseRedirect(reverse('base:home'))
