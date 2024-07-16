@@ -102,19 +102,25 @@ def register_request(request):
             email = email.replace(' ','')
             password1 = password1.replace(' ','')
             password2 = password2.replace(' ','')
-            if password1 == password2:
-
-                new_user = User.objects.create_user(username=username, first_name = first_name, 
-                                                    last_name =last_name, password=password1, email= email)
-                new_user.save()
-                artist = Artist.objects.create(user = new_user, name=username)
-                buyer = Buyer.objects.create(user = new_user, name = username)
-
-                login(request, new_user)
-                return HttpResponseRedirect(reverse('base:home'))
-            else:
-                context = {'err':'Your passwords didn\'t match', 'company_name':company_name}
+            if User.objects.filter(email = email).exists():
+                context = {'err': 'A user with this email already exists. Try logging in instead.', 'company_name':company_name}
                 return render (request, 'base/register.html', context)
+            else:
+
+
+                if password1 == password2:
+
+                    new_user = User.objects.create_user(username=username, first_name = first_name, 
+                                                        last_name =last_name, password=password1, email= email)
+                    new_user.save()
+                    artist = Artist.objects.create(user = new_user, name=username)
+                    buyer = Buyer.objects.create(user = new_user, name = username)
+
+                    login(request, new_user)
+                    return HttpResponseRedirect(reverse('base:home'))
+                else:
+                    context = {'err':'Your passwords didn\'t match', 'company_name':company_name}
+                    return render (request, 'base/register.html', context)
         except (IntegrityError):
             context = {'err': 'A user with this username already exists.', 'company_name':company_name}
             return render(request, 'base/register.html', context)
