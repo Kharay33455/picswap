@@ -191,3 +191,13 @@ class Swap(models.Model):
 
     def __str__(self):
         return f'{self.artist} sold {self.piece} to {self.buyer} at {self.price} on {self.date}'
+    
+"""Steps"""
+class Step(models.Model):
+    picture = models.ImageField(upload_to='images/steps')
+    header = models.CharField(max_length=50)
+    step = models.TextField()
+    note = models.TextField()
+
+    def __str__(self):
+        return f'{self.header}'

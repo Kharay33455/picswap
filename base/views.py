@@ -12,8 +12,10 @@ company_name = Company_name.objects.first()
 
 def base(request):
     company_name = Company_name.objects.first()
+    steps = Step.objects.all()
 
-    context = {'company_name':company_name}
+    context = {'company_name':company_name, 'steps':steps}
+    
     return render (request, 'base/index.html', context)
 
 def featured(request):
@@ -145,6 +147,10 @@ def show(request):
         if request.method == 'POST':
             name = request.POST['name']
             description = request.POST['des']
+            if description =='':
+                description = request.POST['name']
+            else:
+                description = request.POST['des']
             image = request.FILES['image']
             img_id = random.randint(1111111111,9999999999999999)
             Images.objects.create(name = name, description = description, image=image, owner = request.user, is_featured = False, image_id =img_id )
@@ -176,7 +182,7 @@ def copyright(request):
                 
                 return HttpResponseRedirect(reverse('base:pay'))
             except(IntegrityError):
-                msg = 'You have already submitted an application for this piece of work. Please, continue with that application.'
+                msg = f'You have already submitted an application for {image.name}. Please, continue with that application.'
                 
                 context = {'company_name':company_name, 'images':images, 'msg':msg}
                 return render(request, 'base/copyright.html', context)
@@ -562,23 +568,12 @@ def search(request):
     
     
 
-#import os
-#def create(request):
- #   owners = User.objects.filter(email = 'me@gmail.com')
-  #  owners2 = User.objects.filter(email = 'kray@gmail.com')
-   # owners3 = list(owners) + list(owners2)
+import os
+from datetime import datetime
+def create(request):
 #    files = r"C:\Users\ASUS\Downloads\From_kharay-20240714T141001Z-001\pfp"
  #   files = os.listdir(files)
 
-  #  counter = 0
-   # for owner in owners3:
-    #    artist = Artist.objects.get(user = owner)
-     #   artist.pfp = f'images/pfp/{files[counter]}'
-      #  artist.save()
-       # buyer = Buyer.objects.get(user = owner)
-#        buyer.pfp = f'images/pfp/{files[counter]}'
- #       buyer.save()
-  #      counter+=1
 
 
             

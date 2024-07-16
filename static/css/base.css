@@ -217,6 +217,11 @@
     height: 50%;
 }
 
+.steps{
+    height: 500px;
+    width: 500px;
+}
+
 @media screen and (min-width:992px) {
     .menu {
         display: none;
@@ -227,6 +232,39 @@
     }
     .piece{
         height: 100%;
+        width: 100%;
+    }
+    .steps{
+        height: 50%;
+        width: 50%;
+    }
+
+}
+
+
+/*
+Carousel styling
+*/
+.my_carousel_container {
+    width: 100%; /* Adjust as needed */
+    overflow: hidden;
+    position: relative;
+}
+.my_carousel_items {
+    display: flex; /* Ensure items are in a row */
+    transition: transform 0.5s ease; /* Smooth transition effect */
+}
+.my_carousel_item {
+    flex: 0 0 auto; /* Prevent items from shrinking */
+    width: 100%; /* Adjust as needed */
+}
+
+
+@media screen and (max-width:600px) {
+    .row{
+        display: block;
+    }
+    .my_carousel_item{
         width: 100%;
     }
 }

@@ -103,7 +103,7 @@
             </form>
             {% if request.user == chat.buyer.user %}
             {% if chat.offer %}
-            <b>{{chat.artist}}</b> is yet to accept your bid of <b>${{chat.offer}}</b>.
+            <b>{{chat.artist}}</b> is yet to respond your bid of <b>${{chat.offer}}</b>.
             {% else %}
             <div class="form-group">
                 <form action="{% url 'base:offer' chat.id %}" method="post">
