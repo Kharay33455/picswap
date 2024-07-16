@@ -96,7 +96,13 @@
                 }
 
                 .mySlides {
-                    display: none
+                    display: none;
+                }
+                .buySlides {
+                    display: none;
+                }
+                .sellSlides{
+                    display: none;
                 }
 
                 img {
@@ -154,6 +160,28 @@
 
                 /* The dots/bullets/indicators */
                 .dot {
+                    cursor: pointer;
+                    height: 15px;
+                    width: 15px;
+                    margin: 0 2px;
+                    background-color: #bbb;
+                    border-radius: 50%;
+                    display: inline-block;
+                    transition: background-color 0.6s ease;
+                }
+
+                .buy_dot {
+                    cursor: pointer;
+                    height: 15px;
+                    width: 15px;
+                    margin: 0 2px;
+                    background-color: #bbb;
+                    border-radius: 50%;
+                    display: inline-block;
+                    transition: background-color 0.6s ease;
+                }
+
+                .sell_dot {
                     cursor: pointer;
                     height: 15px;
                     width: 15px;
@@ -259,6 +287,10 @@
             <!--Test carousel ends here-->
         </div>
 
+
+
+        <div>
+
         <h3>
             Buying images on {{company_name.name}}
         </h3>
@@ -268,6 +300,99 @@
             transfers it to the escrow account. Upon confirmation from the seller that the amount matches the agreed
             order, the funds are released to the seller and the image is transferred to the buyer. A licensing fee,
             based on a percentage of the transaction amount, is required to receive your license.</p>
+
+            <h4 style="background-color: #6528E0; color: white;">
+                Step by step guide to buying on {{company_name.name}}.
+            </h4>
+
+            
+            <div class="slideshow-container">
+                {% for step in buy %}
+                
+
+                <div class="buySlides">
+                    <div class="numbertext">{{step.header}} / {{buy|length}} </div>
+                    <div class="row">
+                        <div class="col">
+                            <img src="{{step.picture.url}}" style="width:100%">
+                        </div>
+                        <div class="col" style="background-color: #6528E0; color: white;">
+                            <h1>
+                                Step {{step.header}}
+                            </h1>
+                            <p>
+                                {{step.step}}
+
+                            </p> <br>
+                            <p>
+                                {{step.note}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+
+
+                <a class="prev" onclick="plusBuySlides(-1)">
+                    ❮
+                </a>
+                <a class="next" onclick="plusBuySlides(1)">❯</a>
+
+            </div>
+            <br>
+
+            <div style="text-align:center">
+                {% for step in buy %}
+                <span class="buy_dot" onclick="currentBuySlide({{step.header}}-1)"></span>
+                {% endfor %}
+
+            </div>
+
+            <script>
+                let buy_slideIndex = 0;
+                showBuySlides(buy_slideIndex);
+
+                function plusBuySlides(n) {
+                    showBuySlides(buy_slideIndex += n);
+                }
+
+                function currentBuySlide(n) {
+                    showBuySlides(buy_slideIndex = n);
+                }
+
+                function showBuySlides(n) {
+                    let i;
+                    let buy_slides = document.getElementsByClassName("buySlides");
+                    let buy_dots = document.getElementsByClassName("buy_dot");
+                    if (n > {{ buy|length }}-1 ) { buy_slideIndex = 0 }
+                if (n < 0) { buy_slideIndex = {{ buy|length }}-1}
+                for (i = 0; i < {{ buy|length}}; i++) {
+                    if (i ==buy_slideIndex){
+                        buy_slides[i].style.display = "block";
+                        buy_dots[i].className = "active buy_dot"
+
+                    } else{
+                        buy_slides[i].style.display = "none";
+                        buy_dots[i].className = "buy_dot"
+
+                    }
+                }
+              
+            }
+            </script>
+
+
+            <!--Test carousel ends here-->
+        </div>
+</div>
+
+
+
+
+
+
+<div>
+
         <h4>
             Selling images on {{company_name.name}}
             </h3>
@@ -281,6 +406,92 @@
             specific to your image will be generated. Share this code with your buyer or initiate an order to start the
             transaction. Avoid sending the image directly to the buyer as we cannot provide protection if you do so.
         </p>
+
+
+        
+        <h4 style="background-color: #6528E0; color: white;">
+            Step by step guide to selling on {{company_name.name}}.
+        </h4>
+
+        
+        <div class="slideshow-container">
+            {% for step in sell %}
+            
+
+            <div class="sellSlides">
+                <div class="numbertext">{{step.header}} / {{sell|length}} </div>
+                <div class="row">
+                    <div class="col">
+                        <img src="{{step.picture.url}}" style="width:100%">
+                    </div>
+                    <div class="col" style="background-color: #6528E0; color: white;">
+                        <h1>
+                            Step {{step.header}}
+                        </h1>
+                        <p>
+                            {{step.step}}
+
+                        </p> <br>
+                        <p>
+                            {{step.note}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+
+            <a class="prev" onclick="plusSellSlides(-1)">
+                ❮
+            </a>
+            <a class="next" onclick="plusSellSlides(1)">❯</a>
+
+        </div>
+        <br>
+
+        <div style="text-align:center">
+            {% for step in sell %}
+            <span class="sell_dot" onclick="currentSellSlide({{step.header}}-1)"></span>
+            {% endfor %}
+
+        </div>
+
+        <script>
+            let sell_slideIndex = 0;
+            showSellSlides(sell_slideIndex);
+
+            function plusSellSlides(n) {
+                showSellSlides(sell_slideIndex += n);
+            }
+
+            function currentSellSlide(n) {
+                showSellSlides(sell_slideIndex = n);
+            }
+
+            function showSellSlides(n) {
+                let i;
+                let sell_slides = document.getElementsByClassName("sellSlides");
+                let sell_dots = document.getElementsByClassName("sell_dot");
+                if (n > {{ sell|length }}-1 ) { sell_slideIndex = 0 }
+            if (n < 0) { sell_slideIndex = {{ sell|length }}-1}
+            for (i = 0; i < {{ sell|length}}; i++) {
+                if (i ==sell_slideIndex){
+                    sell_slides[i].style.display = "block";
+                    sell_dots[i].className = "active sell_dot"
+
+                } else{
+                    sell_slides[i].style.display = "none";
+                    sell_dots[i].className = "sell_dot"
+
+                }
+            }
+          
+        }
+        </script>
+
+
+
+    </div>
     </div>
 </div>
 {% endblock %}

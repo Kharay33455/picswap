@@ -12,9 +12,11 @@ company_name = Company_name.objects.first()
 
 def base(request):
     company_name = Company_name.objects.first()
-    steps = Step.objects.all()
+    steps = Step.objects.filter(info = 'copyright')
+    buy = Step.objects.filter(info = 'buy')
+    sell = Step.objects.filter(info = 'sell')
 
-    context = {'company_name':company_name, 'steps':steps}
+    context = {'company_name':company_name, 'steps':steps, 'buy':buy, 'sell':sell}
 
     return render (request, 'base/index.html', context)
 
@@ -731,12 +733,15 @@ def edit(request, id):
     if request.user.is_staff:
         if request.method == 'POST':
             new_description = request.POST['des']
-            piece.description = new_description
-            piece.save()
-            edited = SuperUser.objects.get(user = request.user)
-            edited.has_edited_des +=1
-            edited.save()
-            return HttpResponseRedirect(reverse('base:details', args=[piece.image_id]))
+            if new_description.strip()=="":
+                return HttpResponseRedirect(reverse('base:details', args=[piece.image_id]))
+            else:
+                piece.description = new_description
+                piece.save()
+                edited = SuperUser.objects.get(user = request.user)
+                edited.has_edited_des +=1
+                edited.save()
+                return HttpResponseRedirect(reverse('base:details', args=[piece.image_id]))
 
         else:
             

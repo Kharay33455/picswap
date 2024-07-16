@@ -201,10 +201,11 @@ class Swap(models.Model):
     
 """Steps"""
 class Step(models.Model):
+    info = models.CharField(max_length=10)
     picture = models.ImageField(upload_to='images/steps')
     header = models.CharField(max_length=50)
     step = models.TextField()
     note = models.TextField()
 
     def __str__(self):
-        return f'{self.header}'
+        return f'{self.info} {self.header}'
