@@ -268,3 +268,52 @@ Carousel styling
         width: 100%;
     }
 }
+.nav-link{
+    color: white;
+}
+.nav-link:hover{
+    color: #5a23c8;
+}
+
+.my_nav{
+    background-color: black;
+    color: white;
+}
+.box{
+    background-color: black;
+    color: white;
+    width: 100%;
+}
+.carousel_item{
+    position: relative;
+}
+.carousel-caption{
+    height: 110%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, .8);
+    margin-left: -15%;
+    margin-bottom: -5%;
+}
+.carousel-text{
+    padding-left: 20%;
+    padding-right: 10%;
+    position: absolute;
+    bottom: 10%;
+    
+}
+.foot{
+    position: fixed;
+    bottom: 0;
+}
+.text-decoration-none{
+    color: white;
+}
+.text-decoration-none:visited{
+    color: white;
+}
+.text-body-secondary{
+    color: #5a23c8 !important;
+}
+.text{
+    color: white !important;
+}
