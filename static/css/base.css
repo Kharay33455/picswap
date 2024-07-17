@@ -1,3 +1,8 @@
+*{
+    overflow-x: hidden !important;
+    overflow-wrap: anywhere !important;
+
+}
 .bd-placeholder-img {
     font-size: 1.125rem;
     text-anchor: middle;
@@ -283,6 +288,8 @@ Carousel styling
     background-color: black;
     color: white;
     width: 100%;
+    padding-left: 1%;
+    padding-right: 1%;
 }
 .carousel_item{
     position: relative;
@@ -316,4 +323,7 @@ Carousel styling
 }
 .text{
     color: white !important;
+}
+.bg-body-tertiary{
+    background-color: black !important;
 }
